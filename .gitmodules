@@ -1,0 +1,3 @@
+[submodule "evennia"]
+	path = evennia
+	url = https://github.com/shriker/evennia
