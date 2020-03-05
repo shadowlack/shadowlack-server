@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block titleblock %}
+{{ view.page_title }}
+{% endblock %}
+
+{% block content %}
+
+{% load addclass %}
+<div class="row">
+  <div class="col">
+    <div class="card">
+      <div class="card-body">
+
+        <h1 class="card-title">{{ view.page_title }}</h1>
+
+        <table class="table table-hover">
+          <tr>
+            <th>Name</th>
+            <th>Gender</th>
+            <th>Age</th>
+            <th>Race</th>
+          </tr>
+          {% for object in object_list %}
+          <tr>
+            <td><a href="{{ object.web_get_detail_url }}">{{ object }}</a></td>
+            <td>{{ object.db.gender }}</td>
+            <td></td>
+            <td>Race</td>
+          </tr>
+          {% empty %}
+          <tr>
+            <td>No characters found.</td>
+          </tr>
+          {% endfor %}
+        </table>
+
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

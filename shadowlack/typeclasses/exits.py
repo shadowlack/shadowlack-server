@@ -35,4 +35,6 @@ class Exit(DefaultExit):
                                         defined, in which case that will simply be echoed.
     """
 
-    pass
+    @property
+    def is_exit(self):
+        return True

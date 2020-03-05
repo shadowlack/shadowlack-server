@@ -12,22 +12,6 @@ from evennia.utils.search import object_search
 from evennia.utils.utils import inherits_from
 
 
-def get_object(self, queryset=None):
-
-    slug = slugify(self.kwargs.get("slug", ""))
-
-    obj = next((x for x in queryset if slugify(x.db_key) == slug), None)
-
-    # Check if this object was requested in a valid manner
-    if not obj:
-        raise HttpResponseBadRequest(
-            "No %(verbose_name)s found matching the query"
-            % {"verbose_name": queryset.model._meta.verbose_name}
-        )
-
-    return obj
-
-
 def sheet(request, object_id):
 
     try:
