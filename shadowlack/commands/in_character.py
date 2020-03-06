@@ -197,21 +197,139 @@ class CmdFeel(MuxCommand):
 
 class CmdEmit(MuxCommand):
     """
-    Prints your message without any name prepended. The message will appear
-exactly as you have typed it.
-
+    @emit
     Usage:
-      emit <paragraph>
+      @emit[/switches] [<obj>, <obj>, ... =] <message>
+      @remit           [<obj>, <obj>, ... =] <message>
+      @pemit           [<obj>, <obj>, ... =] <message>
+    Switches:
+      room : limit emits to rooms only (default)
+      players : limit emits to players only
+      contents : send to the contents of matched objects too
+    Emits a message to the selected objects or to
+    your immediate surroundings. If the object is a room,
+    send to its contents. @remit and @pemit are just
+    limited forms of @emit, for sending to rooms and
+    to players respectively.
     """
-    key = "emit"
+    key = "@emit"
+    aliases = ["@pemit", "@remit", "\\\\"]
     locks = "cmd:all()"
-    help_category = "In Character"
+    help_category = "Social"
+    perm_for_switches = "Builders"
+    arg_regex = None
+
+    def get_help(self, caller, cmdset):
+        """Returns custom help file based on caller"""
+        if caller.check_permstring(self.perm_for_switches):
+            return self.__doc__
+        help_string = """
+        @emit
+        Usage :
+            @emit <message>
+        Emits a message to your immediate surroundings. This command is
+        used to provide more flexibility than the structure of poses, but
+        please remember to indicate your character's name.
+        """
+        return help_string
 
     def func(self):
-        if not self.args:
-            msg = "What do you want to do?"
-            self.caller.msg(msg)
+        """Implement the command"""
+
+        caller = self.caller
+        if caller.check_permstring(self.perm_for_switches):
+            args = self.args
         else:
-            msg = self.args.strip()
-            self.caller.location.msg_contents(
-                text=(msg, {"type": "emit"}), from_obj=self.caller)
+            args = self.raw.lstrip(" ")
+
+        if not args:
+            string = "Usage: "
+            string += "\n@emit[/switches] [<obj>, <obj>, ... =] <message>"
+            string += "\n@remit           [<obj>, <obj>, ... =] <message>"
+            string += "\n@pemit           [<obj>, <obj>, ... =] <message>"
+            caller.msg(string)
+            return
+
+        rooms_only = 'rooms' in self.switches
+        players_only = 'players' in self.switches
+        send_to_contents = 'contents' in self.switches
+        perm = self.perm_for_switches
+        normal_emit = False
+
+        # we check which command was used to force the switches
+        if (self.cmdstring == '@remit' or self.cmdstring == '@pemit') and not caller.check_permstring(perm):
+            caller.msg("Those options are restricted to GMs only.")
+            return
+        self.caller.posecount += 1
+        if self.cmdstring == '@remit':
+            rooms_only = True
+            send_to_contents = True
+        elif self.cmdstring == '@pemit':
+            players_only = True
+
+        if not caller.check_permstring(perm):
+            rooms_only = False
+            players_only = False
+
+        if not self.rhs or not caller.check_permstring(perm):
+            message = args
+            normal_emit = True
+            objnames = []
+            do_global = False
+        else:
+            do_global = True
+            message = self.rhs
+            if caller.check_permstring(perm):
+                objnames = self.lhslist
+            else:
+                objnames = [
+                    x.key for x in caller.location.contents if x.player]
+        if do_global:
+            do_global = caller.check_permstring(perm)
+        # normal emits by players are just sent to the room
+        if normal_emit:
+            gms = [
+                ob for ob in caller.location.contents if ob.check_permstring('builders')]
+            non_gms = [
+                ob for ob in caller.location.contents if "emit_label" in ob.tags.all() and ob.player]
+            gm_msg = "{w[{c%s{w]{n %s" % (caller.name, message)
+            caller.location.msg_contents(gm_msg, from_obj=caller, options={
+                                         'is_pose': True}, gm_msg=True)
+            for ob in non_gms:
+                ob.msg(gm_msg, from_obj=caller, options={'is_pose': True})
+            caller.location.msg_contents(
+                message, exclude=gms + non_gms, from_obj=caller, options={'is_pose': True})
+            return
+        # send to all objects
+        for objname in objnames:
+            if players_only:
+                obj = caller.player.search(objname)
+                if obj:
+                    obj = obj.character
+            else:
+                obj = caller.search(objname, global_search=do_global)
+            if not obj:
+                caller.msg("Could not find %s." % objname)
+                continue
+            if rooms_only and obj.location:
+                caller.msg("%s is not a room. Ignored." % objname)
+                continue
+            if players_only and not obj.player:
+                caller.msg("%s has no active player. Ignored." % objname)
+                continue
+            if obj.access(caller, 'tell'):
+                if obj.check_permstring(perm):
+                    bmessage = "{w[Emit by: {c%s{w]{n %s" % (
+                        caller.name, message)
+                    obj.msg(bmessage, options={'is_pose': True})
+                else:
+                    obj.msg(message, options={'is_pose': True})
+                if send_to_contents and hasattr(obj, "msg_contents"):
+                    obj.msg_contents(message, from_obj=caller, kwargs={
+                                     'options': {'is_pose': True}})
+                    caller.msg("Emitted to %s and contents:\n%s" %
+                               (objname, message))
+                elif caller.check_permstring(perm):
+                    caller.msg("Emitted to %s:\n%s" % (objname, message))
+            else:
+                caller.msg("You are not allowed to emit to %s." % objname)
