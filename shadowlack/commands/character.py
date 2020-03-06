@@ -1,9 +1,10 @@
 from evennia.utils import logger
 
+from evennia.commands.default.muxcommand import MuxCommand
 from commands.command import Command
 
 
-class CmdGender(Command):
+class CmdGender(MuxCommand):
     """
     Set your gender on yourself
 

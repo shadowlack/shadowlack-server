@@ -1,13 +1,11 @@
 from evennia.utils import logger
-
-from commands.command import Command
-from evennia.commands.default.general import CmdPose, CmdSay, CmdWhisper
+from evennia.commands.default.muxcommand import MuxCommand
 
 
-class CmdPose(CmdPose):
-    __doc__ = CmdPose.__doc__
+class CmdPose(MuxCommand):
     """
-    strike a pose
+    Strike a pose.
+
     Usage:
       pose <pose text>
       pose's <pose text>
@@ -19,7 +17,7 @@ class CmdPose(CmdPose):
     automatically begin with your name.
     """
     key = "pose"
-    aliases = [":", "emote", "/me"]
+    aliases = [":", "emote", "me", "em"]
     locks = "cmd:all()"
     help_category = "In Character"
 
@@ -31,6 +29,7 @@ class CmdPose(CmdPose):
         the caller's name and the emote with a
         space.
         """
+        super().parse()
         args = self.args
         if args and not args[0] in ["'", ",", ":"]:
             args = " %s" % args.strip()
@@ -47,9 +46,9 @@ class CmdPose(CmdPose):
                 text=(msg, {"type": "pose"}), from_obj=self.caller)
 
 
-class CmdSay(CmdSay):
+class CmdSay(MuxCommand):
     """
-    speak as your character
+    Speak as your character
     Usage:
       say <message>
     Talk to those in your current location.
@@ -82,7 +81,7 @@ class CmdSay(CmdSay):
         caller.at_say(speech, msg_self=True)
 
 
-class CmdWhisper(CmdWhisper):
+class CmdWhisper(MuxCommand):
     """
     Speak privately as your character to another
     Usage:
@@ -93,7 +92,7 @@ class CmdWhisper(CmdWhisper):
     """
 
     key = "whisper"
-    aliases = ['tell', "/msg"]
+    aliases = ['tell', "msg"]
     locks = "cmd:all()"
     help_category = "In Character"
 
@@ -126,7 +125,7 @@ class CmdWhisper(CmdWhisper):
                       receivers=receivers, whisper=True)
 
 
-class CmdYell(Command):
+class CmdYell(MuxCommand):
     """
     Raise your voice and yell
 
@@ -152,7 +151,7 @@ class CmdYell(Command):
             text=msg, from_obj=speaker)
 
 
-class CmdDream(Command):
+class CmdDream(MuxCommand):
     """
     Dream a dream.
 
@@ -174,7 +173,7 @@ class CmdDream(Command):
         caller.msg("You dream: %s" % self.args)
 
 
-class CmdFeel(Command):
+class CmdFeel(MuxCommand):
     """
     State what your character is feeling
 
@@ -194,3 +193,25 @@ class CmdFeel(Command):
         """
         caller = self.caller
         caller.msg("You feel: %s" % self.args)
+
+
+class CmdEmit(MuxCommand):
+    """
+    Prints your message without any name prepended. The message will appear
+exactly as you have typed it.
+
+    Usage:
+      emit <paragraph>
+    """
+    key = "emit"
+    locks = "cmd:all()"
+    help_category = "In Character"
+
+    def func(self):
+        if not self.args:
+            msg = "What do you want to do?"
+            self.caller.msg(msg)
+        else:
+            msg = self.args.strip()
+            self.caller.location.msg_contents(
+                text=(msg, {"type": "emit"}), from_obj=self.caller)

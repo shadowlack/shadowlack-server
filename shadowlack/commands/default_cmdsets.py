@@ -15,11 +15,9 @@ own cmdsets by inheriting from them or directly from `evennia.CmdSet`.
 """
 
 from evennia import default_cmds
-from evennia.contrib import dice, mail
-from commands.gametime import CmdTime
+from evennia.commands.default.muxcommand import MuxCommand
 from commands.character import CmdGender
-from commands.preferences import CmdMsgColour
-from commands.in_character import CmdYell, CmdDream, CmdPose, CmdSay, CmdWhisper
+from commands.in_character import CmdYell, CmdDream, CmdEmit, CmdPose, CmdSay, CmdWhisper
 
 
 class CharacterCmdSet(default_cmds.CharacterCmdSet):
@@ -41,6 +39,7 @@ class CharacterCmdSet(default_cmds.CharacterCmdSet):
 
         # in character
         self.add(CmdDream())
+        self.add(CmdEmit())
         self.add(CmdPose())
         self.add(CmdSay())
         self.add(CmdWhisper())
@@ -63,6 +62,7 @@ class AccountCmdSet(default_cmds.AccountCmdSet):
         Populates the cmdset
         """
         super().at_cmdset_creation()
+        self.add(CmdSay())
 
 
 class UnloggedinCmdSet(default_cmds.UnloggedinCmdSet):
