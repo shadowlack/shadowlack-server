@@ -18,7 +18,7 @@ from evennia import default_cmds
 from commands.character import CmdGender
 from commands.in_character import CmdYell, CmdDream, CmdEmit, CmdPose, CmdSay, CmdWhisper
 
-from commands.help import CmdHelp
+from commands.base.help import CmdHelp
 
 
 class CharacterCmdSet(default_cmds.CharacterCmdSet):

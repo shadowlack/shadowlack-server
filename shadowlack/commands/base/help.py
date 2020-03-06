@@ -123,7 +123,7 @@ class CmdHelp(Command):
         """
         string = ""
         if hdict_cmds and any(hdict_cmds.values()):
-            string += "\n" + _SEP + "\n   |CCommand help entries|n\n" + _SEP
+            string += "\n" + _SEP + "\n   |CCommand Help Entries|n\n" + _SEP
             for category in sorted(hdict_cmds.keys()):
                 string += "\n  |w%s|n:\n" % (str(category).title())
                 string += "|G" + \
