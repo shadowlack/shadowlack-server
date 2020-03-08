@@ -1,5 +1,24 @@
 from evennia.utils import logger
+from evennia.utils import logger, create, search
+from evennia.utils.evmenu import EvMenu
 from evennia.commands.default.muxcommand import MuxCommand
+
+
+class CmdNew(MuxCommand):
+    """
+    Create a new character
+
+    Usage:
+      new
+    """
+    key = "new"
+    locks = "cmd:all()"
+    help_category = "Character"
+
+    def func(self):
+
+        EvMenu(self.caller, "menus.character_create", startnode="choose_race",
+               cmdset_mergetype="Replace", cmd_on_exit="look")
 
 
 class CmdGender(MuxCommand):

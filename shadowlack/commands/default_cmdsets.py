@@ -15,7 +15,7 @@ own cmdsets by inheriting from them or directly from `evennia.CmdSet`.
 """
 
 from evennia import default_cmds
-from commands.character import CmdGender
+from commands.character import CmdGender, CmdNew
 from commands.in_character import CmdYell, CmdDream, CmdEmit, CmdPose, CmdSay, CmdWhisper
 
 from commands.base.help import CmdHelp
@@ -64,6 +64,7 @@ class AccountCmdSet(default_cmds.AccountCmdSet):
         """
         super().at_cmdset_creation()
         self.add_overridden_commands()
+        self.add(CmdNew())
 
     def add_overridden_commands(self):
         self.add(CmdHelp())

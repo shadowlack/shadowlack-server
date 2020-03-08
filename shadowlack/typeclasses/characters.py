@@ -13,6 +13,8 @@ from django.urls import reverse
 from evennia import DefaultCharacter
 from evennia.utils import logger, ansi
 
+from typeclasses.races import Pendragon
+
 GENDER_PRONOUN_MAP = {
     "female": {"s": "she", "o": "her", "p": "her", "a": "hers"},
     "male": {"s": "he", "o": "him", "p": "his", "a": "his"},
@@ -63,17 +65,29 @@ class Character(DefaultCharacter):
         self.db.desc = "You see no one special."
         self.db.sdesc = "An unknown stranger"
         self.db.gender = "Ambiguous"
-        self.db.age = 18
+        self.db.age = 0
+        self.db.height = 0
+        self.db.weight = 0
+        self.db.race = Pendragon()
+        seld.db.is_nullfire = False
 
         # information
-        self.db.surname = "None"
+        self.db.surname = None
         self.db.marital_status = "Single"
-        self.db.allegiance = "None"
-        self.db.health_status = "Alive"
-        self.db.sleep_status = "Awake"
+        self.db.allegiance = None
+        self.db.is_awake = True
 
-        self.db.wallet = {"Khasi": 0, "Bhijan": 0}
+        self.db.khasi = 0
+        self.db.bhijan = 0
         self.db.position = 'STANDING'
+
+        # abilities
+        self.db.abilities = {}
+        self.db.can_get_pregnant = False
+        self.db.is_sterile = False
+        # nicknames
+        self.db.nicks = {}
+
         self.db.pose_default = "is here."
         self.db.pose = self.db.pose or self.db.pose_default
         self.db.pose_death = 'lies dead.'
