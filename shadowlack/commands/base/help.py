@@ -22,7 +22,7 @@ CMD_IGNORE_PREFIXES = settings.CMD_IGNORE_PREFIXES
 # limit symbol import for API
 __all__ = ("CmdHelp", "CmdSetHelp")
 _DEFAULT_WIDTH = settings.CLIENT_DEFAULT_WIDTH
-_SEP = "|C" + "-" * _DEFAULT_WIDTH + "|n"
+_SEP = "|304" + "-" * _DEFAULT_WIDTH + "|n"
 
 
 class CmdHelp(Command):
@@ -99,16 +99,16 @@ class CmdHelp(Command):
         """
         string = _SEP + "\n"
         if title:
-            string += "|CHelp for |w%s|n" % title
+            string += "|404Help for |y%s|n" % title
         if aliases:
-            string += " |C(aliases: %s|C)|n" % ("|C,|n ".join("|w%s|n" %
-                                                              ali for ali in aliases))
+            string += " |404(aliases: %s|404)|n" % ("|404,|n ".join("|w%s|n" %
+                                                                    ali for ali in aliases))
         if help_text:
             string += "\n%s" % dedent(help_text.rstrip())
         if suggested:
-            string += "\n\n|CSuggested:|n "
-            string += "%s" % fill("|C,|n ".join("|w%s|n" %
-                                                sug for sug in suggested))
+            string += "\n\n|404Suggested:|n "
+            string += "%s" % fill("|404,|n ".join("|w%s|n" %
+                                                  sug for sug in suggested))
         string.strip()
         string += "\n" + _SEP
         return string
@@ -123,17 +123,17 @@ class CmdHelp(Command):
         """
         string = ""
         if hdict_cmds and any(hdict_cmds.values()):
-            string += "\n" + _SEP + "\n   |CCommand Help Entries|n\n" + _SEP
+            string += "\n" + _SEP + "\n   |404Command Help Entries|n\n" + _SEP
             for category in sorted(hdict_cmds.keys()):
                 string += "\n  |w%s|n:\n" % (str(category).title())
-                string += "|G" + \
-                    fill("|C, |G".join(sorted(hdict_cmds[category]))) + "|n"
+                string += "|y" + \
+                    fill("|w, |y".join(sorted(hdict_cmds[category]))) + "|n"
         if hdict_db and any(hdict_db.values()):
-            string += "\n\n" + _SEP + "\n\r  |COther help entries|n\n" + _SEP
+            string += "\n\n" + _SEP + "\n\r  |404Other help entries|n\n" + _SEP
             for category in sorted(hdict_db.keys()):
                 string += "\n\r  |w%s|n:\n" % (str(category).title())
                 string += (
-                    "|G"
+                    "|y"
                     + fill(", ".join(sorted([str(topic)
                                              for topic in hdict_db[category]])))
                     + "|n"

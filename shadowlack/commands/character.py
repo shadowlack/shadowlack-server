@@ -18,7 +18,7 @@ class CmdNew(MuxCommand):
     def func(self):
 
         EvMenu(self.caller, "menus.character_create", startnode="choose_race",
-               cmdset_mergetype="Replace", cmd_on_exit="look")
+               cmdset_mergetype="Replace", cmd_on_exit="look", auto_quit=True, auto_look=True, auto_help=True)
 
 
 class CmdGender(MuxCommand):

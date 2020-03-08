@@ -68,6 +68,7 @@ class Character(DefaultCharacter):
         self.db.age = 0
         self.db.height = 0
         self.db.weight = 0
+        self.db.build = "Average"
         self.db.race = Pendragon()
         seld.db.is_nullfire = False
 
@@ -100,7 +101,13 @@ class Character(DefaultCharacter):
 
         @property
         def race(self):
-            return self.db.race or "Pendragon"
+            return self.db.race.name if self.db.race else "Pendragon"
+
+        def age_description(self):
+            return self.db.race.age_description(self.db.age)
+
+        def height_description(self):
+            return self.db.race.height_description(self.db.height)
 
         @property
         def char_ob(self):

@@ -56,11 +56,11 @@ class Races():
         if h > high:
             return "unnaturally tall"
         if h_perc >= 100.00:
-            return "incredibly tall"
+            return "impressive"
         if h_perc >= 95.00:
-            return "very tall"
-        if h_perc >= 90.00:
             return "tall"
+        if h_perc >= 90.00:
+            return "above-average"
         if h_perc >= 80.00:
             return "average"
         if h_perc >= 70.00:
@@ -165,6 +165,8 @@ class Rapine(Races):
         self.name = "Rapine"
         self.plural_name = "Rapine"
         self.scientific_name = "bloody bastards"
+        self.min_height = 2.10
+        self.max_height = 2.80
         self.is_playable = False
         self.homeworld = "Vaiuto"
         # soul suckers
