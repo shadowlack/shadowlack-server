@@ -1,4 +1,5 @@
 import random
+import re
 import string
 
 from server.conf import settings
@@ -9,17 +10,23 @@ from evennia.utils.evmenu import EvMenu, list_node, get_input
 from typeclasses.races import Anubi, Aquabat, Feydragon, Khell, Lukuo, Pendragon, Rapine, Takula, Yki
 
 
+def _help(caller):
+    """
+    """
+    pass
+
+
 def _calculate_height(caller):
     """
     Randomize a character's height based on race min and max height values.
     60% chance to be average height
     20% chance to be either short or tall
     """
-    my_list = ['short'] * 20 + ['tall'] * 20 + ['average'] * 60
-    variation = random.choice(my_list)
-    if variation == "short":
+    stature_deviation = ['short'] * 20 + ['tall'] * 20 + ['average'] * 60
+    stature = random.choice(stature_deviation)
+    if stature == "short":
         height_var = random.uniform(-0.05, -0.15)
-    elif variation == "tall":
+    elif stature == "tall":
         height_var = random.uniform(0.05, 0.15)
     else:
         height_var = 0.00
@@ -69,7 +76,7 @@ def _choose_race(caller, raw_string, **kwargs):
     caller.ndb._menutree.sheet = {}
     caller.ndb._menutree.sheet['name'] = None
     caller.ndb._menutree.sheet['race'] = race.name
-    caller.ndb._menutree.sheet['build'] = "Average"
+    caller.ndb._menutree.sheet['weight'] = "Average"
     caller.ndb._menutree.sheet['age'] = 24
 
     caller.db.race = race
@@ -125,29 +132,29 @@ def choose_gender(caller):
     return text, options
 
 
-def _choose_build(caller, raw_string, **kwargs):
+def _choose_weight(caller, raw_string, **kwargs):
     """
-    Set your character's build
+    Set your character's weight
     """
-    build = kwargs.get("build", None)
-    if not build:
+    weight = kwargs.get("weight", None)
+    if not weight:
         caller.error_echo(
-            "Something went wrong with build selection.")
-        return "choose_build"
-    caller.msg("|wYou set your build to {}.|n".format(build))
-    caller.ndb._menutree.sheet['build'] = build
+            "Something went wrong with weight selection.")
+        return "choose_weight"
+    caller.msg("|wYou set your weight to {}.|n".format(weight))
+    caller.ndb._menutree.sheet['weight'] = weight
     return "look_at_me"
 
 
-def choose_build(caller, raw_string, **kwargs):
+def choose_weight(caller, raw_string, **kwargs):
     """
-    Choose your character's build
+    Choose your character's weight
     """
-    text = "Choose your character's natural build."
+    text = "Choose your character's natural weight."
     options = []
-    for build in ["Underweight", "Slight", "Average", "Heavy", "Obese"]:
-        options.append({"key": (build[:1].lower()), "desc": build, "goto": (
-            _choose_build, {"build": build})})
+    for weight in ["Underweight", "Light", "Average", "Heavy", "Obese"]:
+        options.append({"key": (weight[:1].lower()), "desc": weight, "goto": (
+            _choose_weight, {"weight": weight})})
     return text, options
 
 
@@ -174,8 +181,8 @@ def _catch_default_input(caller, raw_string, **kwargs):
         return enter_name
     elif input_string == "age":
         return enter_age
-    elif input_string == "build":
-        return "choose_build"
+    elif input_string == "weight":
+        return "choose_weight"
     elif input_string == "height":
         """
         Re-roll a character's height
@@ -190,29 +197,28 @@ def _catch_default_input(caller, raw_string, **kwargs):
 
 
 def _set_age(caller, raw_string, **kwargs):
-    inp = raw_string.strip()
-    prev_age = kwargs.get("prev_age")
-    caller.ndb._menutree.sheet['age'] = prev_age
-    if not inp:
-        if prev_age:
-            caller.key = prev_age
-            caller.msg("Your age was set to |w{}|n.".format(prev_age))
-            return "look_at_me"
-        else:
-            caller.msg("Cancelled.")
-            return "look_at_me"
+    inp_age = raw_string.strip()
+
+    if not inp_age.isdigit():
+        caller.msg("|RInvalid age. You must enter a number.|n")
     else:
-        return None, {"prev_age": inp}
+        inp_age = int(inp_age)
+        if inp_age <= 0 or inp_age > 172:
+            caller.msg(
+                "|RInvalid age. You must enter a positive integer between 1 and 172.|n")
+        else:
+            caller.msg("|wYou set your age to {}.|n".format(inp_age))
+            caller.ndb._menutree.sheet['age'] = inp_age
+            caller.db.age = inp_age
+
+    return "look_at_me"
 
 
 def enter_age(caller, raw_string, **kwargs):
-    prev_age = kwargs.get("prev_age")
-    if prev_age:
-        text = "Change the age or |y<enter>|n to accept."
-    else:
-        text = "Enter your character's age or |y<enter>|n to cancel."
+    text = ("How old is this character? (between 1 and 172)",
+            "Your character's age must be between 1 and 172. Only positive integers are accepted.  Your character's age will determine certain rights and privileges in society, as well as closeness to death.")
     options = {"key": "_default",
-               "goto": (_set_age, {"prev_age": prev_age})}
+               "goto": (_set_age, {})}
     return text, options
 
 
@@ -255,10 +261,10 @@ def look_at_me(caller):
     table.add_row("Gender", caller.ndb._menutree.sheet['gender'])
     table.add_row("Height", caller.ndb._menutree.sheet['height'] +
                   " metres (" + caller.ndb._menutree.sheet['height_desc'] + ")")
-    table.add_row("Build", caller.ndb._menutree.sheet['build'])
+    table.add_row("Weight", caller.ndb._menutree.sheet['weight'])
     table.reformat_column(0, align="r")
 
     options = (
-        {"key": "name", "desc": "Name your character.", "goto": "enter_name"}, {"key": "age", "desc": "Change your character's age.", "goto": "enter_age"},  {"key": "height", "desc": "Not tall or short enough? Re-roll your character's height.", "goto": (_catch_default_input)}, {"key": "build", "desc": "Adjust your character's natural build (thinner, heavier, etc).", "goto": (_catch_default_input)}, {"key": "continue", "desc": "|yContinue|n with character creation.", "goto": (_catch_default_input)}, {"key": "reset", "desc": "Reset your progress and start over character creation.", "goto": "choose_race"}, {"key": "_default", "goto": (_catch_default_input)})
+        {"key": "name", "desc": "Name your character.", "goto": "enter_name"}, {"key": "age", "desc": "Change your character's age.", "goto": "enter_age"},  {"key": "height", "desc": "Not tall or short enough? Re-roll your character's height.", "goto": (_catch_default_input)}, {"key": "weight", "desc": "Adjust your character's weight (lighter, heavier, etc).", "goto": (_catch_default_input)}, {"key": "continue", "desc": "|yContinue|n with character creation.", "goto": (_catch_default_input)}, {"key": "reset", "desc": "Reset your progress and start over character creation.", "goto": "choose_race"}, {"key": "_default", "goto": (_catch_default_input)})
 
     return table, options
