@@ -67,10 +67,9 @@ class Character(DefaultCharacter):
         self.db.gender = "Ambiguous"
         self.db.age = 0
         self.db.height = 0
-        self.db.weight = 0
-        self.db.build = "Average"
+        self.db.weight = "Average"
         self.db.race = Pendragon()
-        seld.db.is_nullfire = False
+        self.db.is_nullfire = False
 
         # information
         self.db.surname = None

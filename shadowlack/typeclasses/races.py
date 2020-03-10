@@ -9,6 +9,7 @@ class Races():
         self.has_mutations = False
         self.is_playable = True
         self.homeworld = "Ramath-lehi"
+        self.can_interbreed = True
 
         self.help_text = None
         self.h_perc = 0.00
@@ -100,6 +101,7 @@ class Aquabat(Races):
         # bonus athletics, notice
         # can change gender
         # can breathe underwater
+        self.can_interbreed = False
 
 
 class Feydragon(Races):
@@ -170,6 +172,7 @@ class Rapine(Races):
         self.is_playable = False
         self.homeworld = "Vaiuto"
         # soul suckers
+        self.can_interbreed = False
 
 
 class Takula(Races):
@@ -184,6 +187,7 @@ class Takula(Races):
         self.max_weight = 113.00
         self.languages = {"Takola"}
         # bonus physique, fight
+        self.can_interbreed = False
 
 
 class Yki(Races):
@@ -192,8 +196,8 @@ class Yki(Races):
         self.name = "Yki"
         self.plural_name = "Yki"
         self.scientific_name = "draco sapiens albusglacies"
-        self.min_height = 0
-        self.max_height = 0
+        self.min_height = 1.30
+        self.max_height = 2.18
         self.min_weight = 0
         self.max_weight = 0
         self.languages = {"Ykili"}

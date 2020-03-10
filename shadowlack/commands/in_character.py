@@ -65,7 +65,7 @@ class CmdSay(MuxCommand):
         caller = self.caller
 
         if not self.args:
-            caller.msg("Say what?")
+            caller.msg("Usage: say <message>")
             return
 
         speech = self.args
