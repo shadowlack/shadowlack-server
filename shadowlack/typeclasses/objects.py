@@ -15,6 +15,10 @@ from evennia import DefaultObject
 
 class Object(DefaultObject):
 
+    def at_object_creation(self):
+        super().at_object_creation()
+        self.db.pose = self.db.pose or self.db.default_pose
+
     def get_mass(self):
         # Default objects have 1 unit mass.
         mass = self.attributes.get('mass', 1)

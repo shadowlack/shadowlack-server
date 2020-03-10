@@ -223,7 +223,7 @@ def enter_age(caller, raw_string, **kwargs):
 
 
 def _set_name(caller, raw_string, **kwargs):
-    inp = raw_string.strip()
+    inp = raw_string.strip().capitalize()
     prev_name = kwargs.get("prev_name")
     caller.ndb._menutree.sheet['name'] = prev_name
     if not inp:

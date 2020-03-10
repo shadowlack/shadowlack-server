@@ -15,10 +15,11 @@ own cmdsets by inheriting from them or directly from `evennia.CmdSet`.
 """
 
 from evennia import default_cmds
-from commands.character import CmdGender, CmdNew
-from commands.in_character import CmdYell, CmdDream, CmdEmit, CmdPose, CmdSay, CmdWhisper
 
 from commands.base.help import CmdHelp
+
+from commands.character import CmdGender, CmdNew
+from commands.roleplay import RPSystemCmdSet
 
 
 class CharacterCmdSet(default_cmds.CharacterCmdSet):
@@ -37,15 +38,7 @@ class CharacterCmdSet(default_cmds.CharacterCmdSet):
         # super().at_cmdset_creation()
 
         self.add(CmdGender())
-
-        # in character
-        self.add(CmdDream())
-        self.add(CmdEmit())
-        self.add(CmdPose())
-        self.add(CmdSay())
-        self.add(CmdWhisper())
-        self.add(CmdYell())
-        # self.add(CmdMsgColour())
+        self.cmdset.add(RPSystemCmdSet, permanent=True)
 
 
 class AccountCmdSet(default_cmds.AccountCmdSet):

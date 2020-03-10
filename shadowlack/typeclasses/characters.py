@@ -12,6 +12,9 @@ from django.urls import reverse
 
 from evennia import DefaultCharacter
 from evennia.utils import logger, ansi
+from evennia.utils.utils import lazy_property, make_iter, variable_from_module
+
+from evennia.contrib.rpsystem import RecogHandler, SdescHandler
 
 from typeclasses.races import Pendragon
 
@@ -59,8 +62,6 @@ class Character(DefaultCharacter):
 
         super().at_object_creation()
 
-        self.db.msgcolour = True
-
         # appearance
         self.db.desc = "You see no one special."
         self.db.sdesc = "An unknown stranger"
@@ -93,6 +94,12 @@ class Character(DefaultCharacter):
         self.db.pose_death = 'lies dead.'
         self.db.pose_count = 0
         #  type/reset/force me = typeclasses.characters.Character
+
+        self.db._sdesc = ""
+        self.db._sdesc_regex = ""
+        self.db._recog_ref2recog = {}
+        self.db._recog_obj2regex = {}
+        self.db._recog_obj2recog = {}
 
         @property
         def is_character(self):
@@ -130,3 +137,43 @@ class Character(DefaultCharacter):
                 "female", "male", "neutral") else "ambiguous"
             pronoun = self.GENDER_PRONOUN_MAP[gender][typ.lower()]
             return pronoun.capitalize() if typ.isupper() else pronoun
+
+    @lazy_property
+    def sdesc(self):
+        return SdescHandler(self)
+
+    @lazy_property
+    def recog(self):
+        return RecogHandler(self)
+
+    def get_display_name(self, looker, **kwargs):
+        """
+        Displays the name of the object in a viewer-aware manner.
+        Args:
+            looker (TypedObject): The object or account that is looking
+                at/getting inforamtion for this object.
+        Kwargs:
+            pose (bool): Include the pose (if available) in the return.
+        Returns:
+            name (str): A string of the sdesc containing the name of the object,
+            if this is defined.
+                including the DBREF if this user is privileged to control
+                said object.
+        Notes:
+            The RPCharacter version of this method colors its display to make
+            characters stand out from other objects.
+        """
+        idstr = "(#%s)" % self.id if self.access(
+            looker, access_type="control") else ""
+        if looker == self:
+            sdesc = self.key
+        else:
+            try:
+                recog = looker.recog.get(self)
+            except AttributeError:
+                recog = None
+            sdesc = recog or (hasattr(self, "sdesc")
+                              and self.sdesc.get()) or self.key
+        pose = " %s" % (self.db.pose or "is here.") if kwargs.get(
+            "pose", False) else ""
+        return "|c%s|n%s%s" % (sdesc, idstr, pose)
