@@ -257,6 +257,7 @@ class Lukuo(Races):
     def __init__(self):
         super().__init__()
         self.name = "Lukuo"
+        self.pronounced = "loo hwoh"
         self.plural_name = "Lukuo"
         self.scientific_name = "draco sapiens mutabilis"
         self.min_height = 1.65
@@ -271,7 +272,7 @@ class Pendragon(Races):
     def __init__(self):
         super().__init__()
         self.name = "Pendragon"
-        self.pronounced = "drag-uh n"
+        self.pronounced = "pen drag-uh n"
         self.plural_name = "Pendragons"
         self.scientific_name = "draco sapiens"
         self.min_height = 1.65
