@@ -17,7 +17,6 @@ own cmdsets by inheriting from them or directly from `evennia.CmdSet`.
 from evennia import default_cmds
 
 from commands.base.help import CmdHelp
-
 from commands.character import CmdGender, CmdNew
 from commands.roleplay import RPSystemCmdSet
 

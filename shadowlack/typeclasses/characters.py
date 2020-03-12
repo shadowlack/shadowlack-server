@@ -16,7 +16,7 @@ from evennia.utils.utils import lazy_property, make_iter, variable_from_module
 
 from evennia.contrib.rpsystem import RecogHandler, SdescHandler
 
-from typeclasses.races import Pendragon
+from world.races import Pendragon
 
 GENDER_PRONOUN_MAP = {
     "female": {"s": "she", "o": "her", "p": "her", "a": "hers"},

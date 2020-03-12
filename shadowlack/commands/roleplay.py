@@ -1,6 +1,72 @@
+import re
+from re import escape as re_escape
+import itertools
+
+from django.conf import settings
+
 from evennia import Command, CmdSet
 from evennia.utils import logger
 from evennia.commands.default.muxcommand import MuxCommand
+
+# ------------------------------------------------------------
+# Emote parser
+# ------------------------------------------------------------
+
+# Settings
+
+# The prefix is the (single-character) symbol used to find the start
+# of a object reference, such as /tall (note that
+# the system will understand multi-word references like '/a tall man' too).
+_PREFIX = "/"
+
+# The num_sep is the (single-character) symbol used to separate the
+# sdesc from the number when  trying to separate identical sdescs from
+# one another. This is the same syntax used in the rest of Evennia, so
+# by default, multiple "tall" can be separated by entering 1-tall,
+# 2-tall etc.
+_NUM_SEP = "-"
+
+# Texts
+
+_EMOTE_NOMATCH_ERROR = """|RNo match for |r{ref}|R.|n"""
+
+_EMOTE_MULTIMATCH_ERROR = """|RMultiple possibilities for {ref}:
+    |r{reflist}|n"""
+
+_RE_FLAGS = re.MULTILINE + re.IGNORECASE + re.UNICODE
+
+_RE_PREFIX = re.compile(r"^%s" % _PREFIX, re.UNICODE)
+
+# This regex will return groups (num, word), where num is an optional counter to
+# separate multimatches from one another and word is the first word in the
+# marker. So entering "/tall man" will return groups ("", "tall")
+# and "/2-tall man" will return groups ("2", "tall").
+_RE_OBJ_REF_START = re.compile(
+    r"%s(?:([0-9]+)%s)*(\w+)" % (_PREFIX, _NUM_SEP), _RE_FLAGS)
+
+_RE_LEFT_BRACKETS = re.compile(r"\{+", _RE_FLAGS)
+_RE_RIGHT_BRACKETS = re.compile(r"\}+", _RE_FLAGS)
+# Reference markers are used internally when distributing the emote to
+# all that can see it. They are never seen by players and are on the form {#dbref}.
+_RE_REF = re.compile(r"\{+\#([0-9]+)\}+")
+
+# This regex is used to quickly reference one self in an emote.
+_RE_SELF_REF = re.compile(r"/me|@", _RE_FLAGS)
+
+# regex for non-alphanumberic end of a string
+_RE_CHAREND = re.compile(r"\W+$", _RE_FLAGS)
+
+# reference markers for language
+_RE_REF_LANG = re.compile(r"\{+\##([0-9]+)\}+")
+# language says in the emote are on the form "..." or langname"..." (no spaces).
+# this regex returns in groups (langname, say), where langname can be empty.
+_RE_LANGUAGE = re.compile(r"(?:\((\w+)\))*(\".+?\")")
+
+# the emote parser works in two steps:
+#  1) convert the incoming emote into an intermediary
+#     form with all object references mapped to ids.
+#  2) for every person seeing the emote, parse this
+#     intermediary form into the one valid for that char.
 
 
 class RPCommand(MuxCommand):
@@ -213,24 +279,24 @@ class CmdSdesc(RPCommand):  # set/look at own sdesc
 
 class CmdRecog(RPCommand):  # assign personal alias to object in room
     """
-    Recognize another person in the same room.
+    Recognize another character in the same room.
 
     Usage:
-      recog
-      recog sdesc as alias
+      recall
+      recall <sdesc> as <alias>
       forget alias
 
     Example:
-        recog tall man as Griatch
-        forget griatch
+        recog a short teacher as Jaceen
+        forget Jaceen
 
-    This will assign a personal alias for a person, or forget said alias.
-    Using the command without arguments will list all current recogs.
+    This will assign a personal alias for a character, or forget said alias.
+    Using the command without arguments will list all current recognitions.
 
     """
 
     key = "recog"
-    aliases = ["recognize", "forget"]
+    aliases = ["recognize", "forget", "remember"]
 
     def parse(self):
         "Parse for the sdesc as alias structure"
@@ -266,7 +332,7 @@ class CmdRecog(RPCommand):  # assign personal alias to object in room
             all_recogs = caller.recog.all()
             if not all_recogs:
                 caller.msg(
-                    "You recognize no-one. " "(Use 'recog <sdesc> as <alias>' to recognize people."
+                    "You recognize no-one. " "(Use 'recog <sdesc> as <alias>' to recognize characters."
                 )
             else:
                 # note that we don't skip those failing enable_recog lock here,

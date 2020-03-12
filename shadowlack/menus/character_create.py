@@ -4,10 +4,10 @@ import string
 
 from server.conf import settings
 
-from evennia.utils import evtable, evform
+from evennia.utils import evtable, evform, fill, dedent
 from evennia.utils.evmenu import EvMenu, list_node, get_input
 
-from typeclasses.races import Anubi, Aquabat, Feydragon, Khell, Lukuo, Pendragon, Rapine, Takula, Yki
+from world import races
 
 
 def _help(caller):
@@ -51,26 +51,7 @@ def _choose_race(caller, raw_string, **kwargs):
             "Something went wrong with race selection.")
         return "choose_race"
 
-    if chosen_race == "Anubi":
-        race = Anubi()
-    elif chosen_race == "Aquabat":
-        race = Aquabat()
-    elif chosen_race == "Feydragon":
-        race = Feydragon()
-    elif chosen_race == "Khell":
-        race = Khell()
-    elif chosen_race == "Lukuo":
-        race = Lukuo()
-    elif chosen_race == "Pendragon":
-        race = Pendragon()
-    elif chosen_race == "Takula":
-        race = Takula()
-    elif chosen_race == "Yki":
-        race = Yki()
-    elif chosen_race == "Rapine":
-        race = Rapine()
-    else:
-        return "choose_race"
+    race = races.load_race(chosen_race)
 
     # Default values
     caller.ndb._menutree.sheet = {}
@@ -85,23 +66,45 @@ def _choose_race(caller, raw_string, **kwargs):
     return "choose_gender"
 
 
+def menunode_race_and_bonuses(caller, raw_string):
+    raw_string = raw_string.strip()
+    if raw_string.isdigit() and int(raw_string) <= len(races.ALL_RACES):
+        race = races.ALL_RACES[int(raw_string) - 1]
+        race = races.load_race(race)
+        caller.ndb._menutree.race = race
+
+    race = caller.ndb._menutree.race
+
+    text = race.desc
+    options = [{"key": ("c", "continue"), "desc": "|gContinue|n character creation with {}.".format(
+        race.plural_name), "goto": (_choose_race, {"race": race.name})}]
+
+    options.append({"key": ("r", "_default"),
+                    "desc": "Return to race selection.",
+                    "goto": "choose_race"})
+
+    return text, options
+
+
 def choose_race(caller, raw_string, **kwargs):
     """
     Choose your character's race.
     """
-    text = ("Choose your character's race.",
-            "Your race determines some of your starting stats and bonus skills.")
+    text = ("Choose your character's race. Select a race to learn more about them.", fill(
+        "Your race determines some of your starting stats and bonus skills. Select a race to see more detailed information."))
     options = []
 
-    for race in ["Anubi", "Aquabat", "Feydragon", "Khell", "Lukuo", "Pendragon", "Takula", "Yki"]:
-        options.append({"key": (race[:2].lower(), race), "desc": race, "goto": (
-            _choose_race, {"race": race})})
+    for race in races.ALL_RACES:
+        race = races.load_race(race)
+        options.append({"desc": "{:<70.70s}...".format(race._desc),
+                        "goto": "menunode_race_and_bonuses"})
 
     # Only admins may create Rapine
+    """
     if caller.check_permstring("Admin"):
         options.append({"key": ("ra", "Rapine", "Rap"), "desc": "|404Rapine (Admin)|n", "goto": (
-            _choose_race, {"race": "Rapine"})})
-
+            menunode_race_and_bonuses, {"race": "Rapine"})})
+    """
     return text, options
 
 
@@ -120,14 +123,16 @@ def _choose_gender(caller, raw_string, **kwargs):
 
 def choose_gender(caller):
     text = "Choose your character's gender. This will affect what pronouns are used to refer to them."
-    options = (
+    options = [
         {"key": ("f"), "desc": "Female - she/her/hers",
          "goto": (_choose_gender, {"gender": "Female"})},
         {"key": ("m"), "desc": "Male - he/him/his",
          "goto": (_choose_gender, {"gender": "Male"})},
         {"key": ("n"), "desc": "Neutral - it/its/its",
          "goto": (_choose_gender, {"gender": "Neutral"})},
-        {"key": ("a"), "desc": "Ambiguous - they/them/theirs", "goto": (_choose_gender, {"gender": "Ambiguous"})})
+        {"key": ("a"), "desc": "Ambiguous - they/them/theirs", "goto": (_choose_gender, {"gender": "Ambiguous"})}]
+    options.append({"key": ("r", "_default"),
+                    "desc": "Return to race selection.", "goto": "choose_race"})
 
     return text, options
 
@@ -265,6 +270,6 @@ def look_at_me(caller):
     table.reformat_column(0, align="r")
 
     options = (
-        {"key": "name", "desc": "Name your character.", "goto": "enter_name"}, {"key": "age", "desc": "Change your character's age.", "goto": "enter_age"},  {"key": "height", "desc": "Not tall or short enough? Re-roll your character's height.", "goto": (_catch_default_input)}, {"key": "weight", "desc": "Adjust your character's weight (lighter, heavier, etc).", "goto": (_catch_default_input)}, {"key": "continue", "desc": "|yContinue|n with character creation.", "goto": (_catch_default_input)}, {"key": "reset", "desc": "Reset your progress and start over character creation.", "goto": "choose_race"}, {"key": "_default", "goto": (_catch_default_input)})
+        {"key": "name", "desc": "Name your character.", "goto": "enter_name"}, {"key": "age", "desc": "Change your character's age.", "goto": "enter_age"},  {"key": "height", "desc": "Not tall or short enough? Re-roll your character's height.", "goto": (_catch_default_input)}, {"key": "weight", "desc": "Adjust your character's weight (lighter, heavier, etc).", "goto": (_catch_default_input)}, {"key": ("c", "continue"), "desc": "|gContinue|n with character creation.", "goto": (_catch_default_input)}, {"key": "reset", "desc": "Reset your progress and start over character creation.", "goto": "choose_race"}, {"key": "_default", "goto": (_catch_default_input)})
 
     return table, options
