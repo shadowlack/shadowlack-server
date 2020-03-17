@@ -17,7 +17,7 @@ own cmdsets by inheriting from them or directly from `evennia.CmdSet`.
 from evennia import default_cmds
 
 from commands.base.help import CmdHelp
-from commands.character import CmdGender, CmdNew
+from commands.character import CmdGender, CmdCreate, RemoveCharCreate
 from commands.roleplay import RPSystemCmdSet
 
 
@@ -56,10 +56,13 @@ class AccountCmdSet(default_cmds.AccountCmdSet):
         """
         super().at_cmdset_creation()
         self.add_overridden_commands()
-        self.add(CmdNew())
+        self.add(CmdCreate())
 
     def add_overridden_commands(self):
         self.add(CmdHelp())
+        self.remove(default_cmds.CmdCharCreate())
+        self.remove(default_cmds.CmdCharDelete())
+        self.remove(default_cmds.CmdColorTest())
 
 
 class UnloggedinCmdSet(default_cmds.UnloggedinCmdSet):
