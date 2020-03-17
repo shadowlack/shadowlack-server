@@ -12,64 +12,34 @@ from evennia.utils.evmenu import EvMenu, list_node, get_input
 from world import races, skills
 
 
-def _help(caller):
+def menunode_start(caller, raw_string, **kwargs):
     """
+    1. Choose your character's race.
     """
-    pass
+    text = ("Choose your character's race. Select a race to learn more about them.", fill(
+        "Your race determines some of your starting stats and bonus skills. Select a race to see more detailed information."))
+    options = []
 
+    for race in races.ALL_RACES:
+        race = races.load_race(race)
+        options.append({"desc": "{:<70.70s}...".format(race._desc),
+                        "goto": "menunode_display_race"})
 
-def _calculate_height(caller):
+    # Only admins may create Rapine
     """
-    Randomize a character's height based on race min and max height values.
-    60% chance to be average height
-    20% chance to be either short or tall
+    if caller.check_permstring("Admin"):
+        options.append({"key": ("ra", "Rapine", "Rap"), "desc": "|404Rapine (Admin)|n", "goto": (
+            menunode_display_race, {"race": "Rapine"})})
     """
-    stature_deviation = ['short'] * 20 + ['tall'] * 20 + ['average'] * 60
-    stature = random.choice(stature_deviation)
-    if stature == "short":
-        height_var = random.uniform(-0.05, -0.15)
-    elif stature == "tall":
-        height_var = random.uniform(0.05, 0.15)
-    else:
-        height_var = 0.00
-
-    height = random.uniform(caller.db.race.min_height,
-                            caller.db.race.max_height)
-    height = height + height_var
-
-    caller.db.height = height
-    caller.ndb._menutree.sheet['height'] = format(height, ".2f")
-    caller.ndb._menutree.sheet['height_desc'] = caller.db.race.height_description(
-        height)
-    pass
+    return text, options
 
 
-def _choose_race(caller, raw_string, **kwargs):
-
-    chosen_race = kwargs.get("race", None)
-
-    if not chosen_race:
-        caller.error_echo(
-            "Something went wrong with race selection.")
-        return "choose_race"
-
-    race = races.load_race(chosen_race)
-
-    # Default values
-    caller.ndb._menutree.sheet = {}
-    caller.ndb._menutree.sheet['name'] = None
-    caller.ndb._menutree.sheet['race'] = race.name
-    caller.ndb._menutree.sheet['weight'] = "Average"
-    caller.ndb._menutree.sheet['age'] = 24
-
-    caller.db.race = race
-    _calculate_height(caller)
-
-    return "choose_gender"
-
-
-def menunode_race_and_bonuses(caller, raw_string):
+def menunode_display_race(caller, raw_string):
+    """
+    2. Display race selection. Has info about race and bonuses.
+    """
     raw_string = raw_string.strip()
+
     if raw_string.isdigit() and int(raw_string) <= len(races.ALL_RACES):
         race = races.ALL_RACES[int(raw_string) - 1]
         race = races.load_race(race)
@@ -83,31 +53,31 @@ def menunode_race_and_bonuses(caller, raw_string):
 
     options.append({"key": ("r", "_default"),
                     "desc": "Return to race selection.",
-                    "goto": "choose_race"})
+                    "goto": "menunode_start"})
 
     return text, options
 
 
-def choose_race(caller, raw_string, **kwargs):
+def _choose_race(caller, raw_string, **kwargs):
     """
-    Choose your character's race.
+    3. Confirm race selection
     """
-    text = ("Choose your character's race. Select a race to learn more about them.", fill(
-        "Your race determines some of your starting stats and bonus skills. Select a race to see more detailed information."))
-    options = []
+    chosen_race = kwargs.get("race", None)
 
-    for race in races.ALL_RACES:
-        race = races.load_race(race)
-        options.append({"desc": "{:<70.70s}...".format(race._desc),
-                        "goto": "menunode_race_and_bonuses"})
+    if not chosen_race:
+        caller.error_echo(
+            "Something went wrong with race selection.")
+        return "menunode_start"
 
-    # Only admins may create Rapine
-    """
-    if caller.check_permstring("Admin"):
-        options.append({"key": ("ra", "Rapine", "Rap"), "desc": "|404Rapine (Admin)|n", "goto": (
-            menunode_race_and_bonuses, {"race": "Rapine"})})
-    """
-    return text, options
+    # default character here?
+    race = races.load_race(chosen_race)
+    caller.ndb._menutree.race = race
+
+    #caller.db.race = race
+    # _calculate_height(caller)
+    #race = caller.ndb._menutree.race
+
+    return "choose_gender"
 
 
 def _choose_gender(caller, raw_string, **kwargs):
@@ -118,7 +88,7 @@ def _choose_gender(caller, raw_string, **kwargs):
             "Something went wrong with gender selection.")
         return "choose_gender"
 
-    caller.ndb._menutree.sheet['gender'] = gender
+    caller.ndb._menutree.gender = gender
 
     return "look_at_me"
 
@@ -134,7 +104,7 @@ def choose_gender(caller):
          "goto": (_choose_gender, {"gender": "Neutral"})},
         {"key": ("a"), "desc": "Ambiguous - they/them/theirs", "goto": (_choose_gender, {"gender": "Ambiguous"})}]
     options.append({"key": ("r", "_default"),
-                    "desc": "Return to race selection.", "goto": "choose_race"})
+                    "desc": "Return to race selection.", "goto": "menunode_start"})
 
     return text, options
 
@@ -262,18 +232,18 @@ def look_at_me(caller):
     # form = evform.EvForm("world/character_sheet.py")
 
     table = evtable.EvTable(border="incols")
-    table.add_row("Name", caller.ndb._menutree.sheet['name'])
-    table.add_row("Race", caller.ndb._menutree.sheet['race'])
-    table.add_row("Age", caller.ndb._menutree.sheet['age'])
-    table.add_row("Gender", caller.ndb._menutree.sheet['gender'])
-    table.add_row("Height", caller.ndb._menutree.sheet['height'] +
-                  " metres (" + caller.ndb._menutree.sheet['height_desc'] + ")")
-    table.add_row("Weight", caller.ndb._menutree.sheet['weight'])
+    table.add_row("Name", 'test')
+    table.add_row("Race", caller.ndb._menutree.race.name)
+    #table.add_row("Age", caller.ndb._menutree.age)
+    table.add_row("Gender", caller.ndb._menutree.gender)
+    # table.add_row("Height", caller.ndb._menutree.sheet['height'] +
+    #              " metres (" + caller.ndb._menutree.sheet['height_desc'] + ")")
+    #table.add_row("Weight", caller.ndb._menutree.sheet['weight'])
     table.reformat_column(0, align="r")
 
     options = (
         {"key": "skills", "desc": "Allocate skills.", "goto": "allocate_skills"},
-        {"key": "name", "desc": "Name your character.", "goto": "enter_name"}, {"key": "age", "desc": "Change your character's age.", "goto": "enter_age"},  {"key": "height", "desc": "Not tall or short enough? Re-roll your character's height.", "goto": (_catch_default_input)}, {"key": "weight", "desc": "Adjust your character's weight (lighter, heavier, etc).", "goto": (_catch_default_input)}, {"key": ("c", "continue"), "desc": "|gContinue|n with character creation.", "goto": (_catch_default_input)}, {"key": "reset", "desc": "Reset your progress and start over character creation.", "goto": "choose_race"}, {"key": "_default", "goto": (_catch_default_input)})
+        {"key": "name", "desc": "Name your character.", "goto": "enter_name"}, {"key": "age", "desc": "Change your character's age.", "goto": "enter_age"},  {"key": "height", "desc": "Not tall or short enough? Re-roll your character's height.", "goto": (_catch_default_input)}, {"key": "weight", "desc": "Adjust your character's weight (lighter, heavier, etc).", "goto": (_catch_default_input)}, {"key": ("c", "continue"), "desc": "|gContinue|n with character creation.", "goto": (_catch_default_input)}, {"key": "reset", "desc": "Reset your progress and start over character creation.", "goto": "menunode_start"}, {"key": "_default", "goto": (_catch_default_input)})
 
     return table, options
 
@@ -288,15 +258,19 @@ def allocate_skills(caller):
 
     for skill in skills.ALL_SKILLS:
         skill = skills.load_skill(skill)
+        skill_types = ''
 
-        attack = ''
-        defend = ''
-        if skill.attack:
-            attack += " |m+Attack|n"
-        if skill.defend:
-            defend += " |c+Defend|n"
+        if skill.attack or skill.defend:
+            skill_types += ' ('
+            if skill.attack:
+                skill_types += "|m+Attack|n"
+            if skill.attack and skill.defend:
+                skill_types += ' and '
+            if skill.defend:
+                skill_types += "|c+Defend|n"
+            skill_types += ')'
 
-        options.append({"desc": "|y{}|n - {}{}{}".format(skill.name, skill.desc, attack, defend),
+        options.append({"desc": "|y{}|n. {}{}".format(skill.name, skill.desc, skill_types),
                         "goto": (_catch_default_input)})
 
     return text, options
@@ -324,3 +298,52 @@ def create_character():
         % (new_character.id, account.id, account.id)
     )
     account.db._playable_characters.append(new_character)
+
+
+def menunode_end(caller, raw_string):
+    """Character created."""
+    caller.new_char.db.chargen_complete = True
+    text = dedent("""
+        You have completed Shadowlack character creation.""")
+    return text, None
+
+
+# Helpers
+
+
+def _help(caller):
+    """
+    """
+    pass
+
+
+def _calculate_height(caller):
+    """
+    Randomize a character's height based on race min and max height values.
+    60% chance to be average height
+    20% chance to be either short or tall
+    """
+    char = caller.new_char
+
+    stature_deviation = ['short'] * 20 + ['tall'] * 20 + ['average'] * 60
+    stature = random.choice(stature_deviation)
+    if stature == "short":
+        height_var = random.uniform(-0.05, -0.15)
+    elif stature == "tall":
+        height_var = random.uniform(0.05, 0.15)
+    else:
+        height_var = 0.00
+
+    height = random.uniform(caller.db.race.min_height,
+                            caller.db.race.max_height)
+    height = height + height_var
+
+    char.height = format(height, ".2f")
+    char.height_desc = caller.db.race.height_description(
+        height)
+
+    #caller.db.height = height
+    #caller.ndb._menutree.sheet['height'] = format(height, ".2f")
+    # caller.ndb._menutree.sheet['height_desc'] = caller.db.race.height_description(
+    #    height)
+    pass
