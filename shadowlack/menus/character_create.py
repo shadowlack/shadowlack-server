@@ -4,10 +4,12 @@ import string
 
 from server.conf import settings
 
-from evennia.utils import evtable, evform, fill, dedent
+from evennia.objects.models import ObjectDB
+from evennia.server.sessionhandler import SESSIONS
+from evennia.utils import evtable, evform, fill, dedent, utils, create, logger, search
 from evennia.utils.evmenu import EvMenu, list_node, get_input
 
-from world import races
+from world import races, skills
 
 
 def _help(caller):
@@ -270,6 +272,55 @@ def look_at_me(caller):
     table.reformat_column(0, align="r")
 
     options = (
+        {"key": "skills", "desc": "Allocate skills.", "goto": "allocate_skills"},
         {"key": "name", "desc": "Name your character.", "goto": "enter_name"}, {"key": "age", "desc": "Change your character's age.", "goto": "enter_age"},  {"key": "height", "desc": "Not tall or short enough? Re-roll your character's height.", "goto": (_catch_default_input)}, {"key": "weight", "desc": "Adjust your character's weight (lighter, heavier, etc).", "goto": (_catch_default_input)}, {"key": ("c", "continue"), "desc": "|gContinue|n with character creation.", "goto": (_catch_default_input)}, {"key": "reset", "desc": "Reset your progress and start over character creation.", "goto": "choose_race"}, {"key": "_default", "goto": (_catch_default_input)})
 
     return table, options
+
+
+def allocate_skills(caller):
+
+    allocate_count = 0
+    text_allocate = "Choose your character's strongest skill."
+
+    text = ("Your character's skills determine... stuff.", "Help text")
+    options = []
+
+    for skill in skills.ALL_SKILLS:
+        skill = skills.load_skill(skill)
+
+        attack = ''
+        defend = ''
+        if skill.attack:
+            attack += " |m+Attack|n"
+        if skill.defend:
+            defend += " |c+Defend|n"
+
+        options.append({"desc": "|y{}|n - {}{}{}".format(skill.name, skill.desc, attack, defend),
+                        "goto": (_catch_default_input)})
+
+    return text, options
+
+
+def _allocate_skills(caller, raw_string, **kwargs):
+
+    return "look_at_me"
+
+
+def create_character():
+
+    account = self.account
+
+    # create the character
+    start_location = ObjectDB.objects.get_id(settings.START_LOCATION)
+    default_home = ObjectDB.objects.get_id(settings.DEFAULT_HOME)
+    permissions = settings.PERMISSION_ACCOUNT_DEFAULT
+    new_character = create.create_object(
+        typeclass, key=key, location=start_location, home=default_home, permissions=permissions
+    )
+    # only allow creator (and developers) to puppet this char
+    new_character.locks.add(
+        "puppet:id(%i) or pid(%i) or perm(Developer) or pperm(Developer);delete:id(%i) or perm(Admin)"
+        % (new_character.id, account.id, account.id)
+    )
+    account.db._playable_characters.append(new_character)

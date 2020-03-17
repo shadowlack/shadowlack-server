@@ -16,7 +16,7 @@ from evennia.utils.utils import lazy_property, make_iter, variable_from_module
 
 from evennia.contrib.rpsystem import RecogHandler, SdescHandler
 
-from world.races import Pendragon
+from world import races, skills
 
 GENDER_PRONOUN_MAP = {
     "female": {"s": "she", "o": "her", "p": "her", "a": "hers"},
@@ -69,7 +69,7 @@ class Character(DefaultCharacter):
         self.db.age = 0
         self.db.height = 0
         self.db.weight = "Average"
-        self.db.race = Pendragon()
+        self.db.race = None
         self.db.is_nullfire = False
 
         # information
@@ -82,8 +82,7 @@ class Character(DefaultCharacter):
         self.db.bhijan = 0
         self.db.position = 'STANDING'
 
-        # abilities
-        self.db.abilities = {}
+        self.db.skills = {}
         self.db.can_get_pregnant = False
         self.db.is_sterile = False
         # nicknames
