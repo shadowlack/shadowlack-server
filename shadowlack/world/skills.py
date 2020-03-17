@@ -46,13 +46,13 @@ _SKILL_DATA = {
         'name': 'Deceive',
         'desc': ("Lying, misdirecting, impersonating, seducing, and disguises."),
         'attack': False,
-        'defend': False
+        'defend': True
     },
     'empathy': {
         'name': 'Empathy',
         'desc': ("Noticing shifts in mood, feeling object auras, and telepathy."),
         'attack': False,
-        'defend': False
+        'defend': True
     },
     'fight': {
         'name': 'Fight',
@@ -184,6 +184,8 @@ class Skill(object):
         desc (str): description of skill
     """
 
-    def __init__(self, name, desc, base):
+    def __init__(self, name, desc, attack, defend):
         self.name = name
         self.desc = desc
+        self.attack = attack
+        self.defend = defend
