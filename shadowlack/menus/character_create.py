@@ -16,8 +16,14 @@ def menunode_start(caller, raw_string, **kwargs):
     """
     1. Choose your character's race.
     """
-    text = ("Choose your character's race. Select a race to learn more about them.", fill(
-        "Your race determines some of your starting stats and bonus skills. Select a race to see more detailed information."))
+    caller.ndb._menutree.name = caller.new_char
+
+    text = dedent("""
+        |cWelcome to Shadowlack's character creation.|n
+
+        To begin, please choose |m{}'s|n race. Choosing a race will bring up a race fact sheet. Type |yhelp|n at any time for more information.""").format(caller.ndb._menutree.name)
+    help_text = fill(
+        "Your race determines some of your starting stats and bonus skills.")
     options = []
 
     for race in races.ALL_RACES:
@@ -31,7 +37,7 @@ def menunode_start(caller, raw_string, **kwargs):
         options.append({"key": ("ra", "Rapine", "Rap"), "desc": "|404Rapine (Admin)|n", "goto": (
             menunode_display_race, {"race": "Rapine"})})
     """
-    return text, options
+    return (text, help_text), options
 
 
 def menunode_display_race(caller, raw_string):
@@ -69,13 +75,16 @@ def _choose_race(caller, raw_string, **kwargs):
             "Something went wrong with race selection.")
         return "menunode_start"
 
-    # default character here?
+    # default character here
     race = races.load_race(chosen_race)
+    caller.db.race = race
     caller.ndb._menutree.race = race
+    caller.ndb._menutree.age = 23
+    caller.ndb._menutree.weight = "Average"
+    caller.ndb._menutree.skills = {}
 
-    #caller.db.race = race
-    # _calculate_height(caller)
-    #race = caller.ndb._menutree.race
+    # generate a randomized height based upon selected race
+    _calculate_height(caller)
 
     return "choose_gender"
 
@@ -119,7 +128,7 @@ def _choose_weight(caller, raw_string, **kwargs):
             "Something went wrong with weight selection.")
         return "choose_weight"
     caller.msg("|wYou set your weight to {}.|n".format(weight))
-    caller.ndb._menutree.sheet['weight'] = weight
+    caller.ndb._menutree.weight = weight
     return "look_at_me"
 
 
@@ -154,9 +163,7 @@ def choose_how_babby_formed(caller):
 def _catch_default_input(caller, raw_string, **kwargs):
     input_string = raw_string.lower()
     caller.msg(input_string)
-    if input_string == "name":
-        return enter_name
-    elif input_string == "age":
+    if input_string == "age":
         return enter_age
     elif input_string == "weight":
         return "choose_weight"
@@ -166,7 +173,7 @@ def _catch_default_input(caller, raw_string, **kwargs):
         """
         _calculate_height(caller)
         caller.msg("|wHeight re-rolled. You are now " +
-                   caller.ndb._menutree.sheet['height_desc'] + " (" + caller.ndb._menutree.sheet['height'] + " metres). Heights for " + caller.db.race.plural_name + " average between " + str(caller.db.race.min_height) + " metres and " + str(caller.db.race.max_height) + " metres.|n")
+                   caller.ndb._menutree.height_desc + " (" + caller.ndb._menutree.height + " metres). Heights for " + caller.db.race.plural_name + " average between " + str(caller.db.race.min_height) + " metres and " + str(caller.db.race.max_height) + " metres.|n")
         return "look_at_me"
     else:
         pass
@@ -185,8 +192,7 @@ def _set_age(caller, raw_string, **kwargs):
                 "|RInvalid age. You must enter a positive integer between 1 and 172.|n")
         else:
             caller.msg("|wYou set your age to {}.|n".format(inp_age))
-            caller.ndb._menutree.sheet['age'] = inp_age
-            caller.db.age = inp_age
+            caller.ndb._menutree.age = inp_age
 
     return "look_at_me"
 
@@ -199,51 +205,22 @@ def enter_age(caller, raw_string, **kwargs):
     return text, options
 
 
-def _set_name(caller, raw_string, **kwargs):
-    inp = raw_string.strip().capitalize()
-    prev_name = kwargs.get("prev_name")
-    caller.ndb._menutree.sheet['name'] = prev_name
-    if not inp:
-        if prev_name:
-            caller.key = prev_name
-            caller.msg("Your name was set to |w{}|n.".format(prev_name))
-            return "look_at_me"
-        else:
-            caller.msg("Cancelled.")
-            return "look_at_me"
-    else:
-        return None, {"prev_name": inp}
-
-
-def enter_name(caller, raw_string, **kwargs):
-    # check if we already entered a name before
-    prev_name = kwargs.get("prev_name")
-    if prev_name:
-        text = "Change this name or |y<enter>|n to accept."
-    else:
-        text = "Enter your character's name or |y<enter>|n to cancel."
-    options = {"key": "_default",
-               "goto": (_set_name, {"prev_name": prev_name})}
-    return text, options
-
-
 def look_at_me(caller):
 
     # form = evform.EvForm("world/character_sheet.py")
 
     table = evtable.EvTable(border="incols")
-    table.add_row("Name", 'test')
+    table.add_row("Name", caller.ndb._menutree.name)
     table.add_row("Race", caller.ndb._menutree.race.name)
-    #table.add_row("Age", caller.ndb._menutree.age)
+    table.add_row("Age", caller.ndb._menutree.age)
     table.add_row("Gender", caller.ndb._menutree.gender)
-    # table.add_row("Height", caller.ndb._menutree.sheet['height'] +
-    #              " metres (" + caller.ndb._menutree.sheet['height_desc'] + ")")
-    #table.add_row("Weight", caller.ndb._menutree.sheet['weight'])
+    table.add_row("Height", caller.ndb._menutree.height +
+                  " metres (" + caller.ndb._menutree.height_desc + ")")
+    table.add_row("Weight", caller.ndb._menutree.weight)
     table.reformat_column(0, align="r")
 
     options = (
-        {"key": "skills", "desc": "Allocate skills.", "goto": "allocate_skills"},
-        {"key": "name", "desc": "Name your character.", "goto": "enter_name"}, {"key": "age", "desc": "Change your character's age.", "goto": "enter_age"},  {"key": "height", "desc": "Not tall or short enough? Re-roll your character's height.", "goto": (_catch_default_input)}, {"key": "weight", "desc": "Adjust your character's weight (lighter, heavier, etc).", "goto": (_catch_default_input)}, {"key": ("c", "continue"), "desc": "|gContinue|n with character creation.", "goto": (_catch_default_input)}, {"key": "reset", "desc": "Reset your progress and start over character creation.", "goto": "menunode_start"}, {"key": "_default", "goto": (_catch_default_input)})
+        {"key": "skills", "desc": "Allocate skills.", "goto": "allocate_skills"}, {"key": "age", "desc": "Change your character's age.", "goto": "enter_age"},  {"key": "height", "desc": "Not tall or short enough? Re-roll your character's height.", "goto": (_catch_default_input)}, {"key": "weight", "desc": "Adjust your character's weight (lighter, heavier, etc).", "goto": (_catch_default_input)}, {"key": ("c", "continue"), "desc": "|gContinue|n with character creation.", "goto": (_catch_default_input)}, {"key": "reset", "desc": "Reset your progress and start over character creation.", "goto": "menunode_start"}, {"key": "_default", "goto": (_catch_default_input)})
 
     return table, options
 
@@ -323,10 +300,9 @@ def _calculate_height(caller):
     60% chance to be average height
     20% chance to be either short or tall
     """
-    char = caller.new_char
-
     stature_deviation = ['short'] * 20 + ['tall'] * 20 + ['average'] * 60
     stature = random.choice(stature_deviation)
+
     if stature == "short":
         height_var = random.uniform(-0.05, -0.15)
     elif stature == "tall":
@@ -338,12 +314,7 @@ def _calculate_height(caller):
                             caller.db.race.max_height)
     height = height + height_var
 
-    char.height = format(height, ".2f")
-    char.height_desc = caller.db.race.height_description(
+    caller.ndb._menutree.height = format(height, ".2f")
+    caller.ndb._menutree.height_desc = caller.db.race.height_description(
         height)
-
-    #caller.db.height = height
-    #caller.ndb._menutree.sheet['height'] = format(height, ".2f")
-    # caller.ndb._menutree.sheet['height_desc'] = caller.db.race.height_description(
-    #    height)
     pass

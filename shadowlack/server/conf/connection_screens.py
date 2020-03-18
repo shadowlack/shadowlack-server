@@ -28,9 +28,9 @@ CONNECTION_SCREEN = """
  https://shadowlack.com
 
  Existing Players:
-      |wconnect <username> <password>|n
+      |yconnect|n |w<username> <password>|n
  If you need to create an account, type (without the <>'s):
-      |wcreate <username> <password>|n
+      |ycreate|n |w<username> <password>|n
 
 
 |b==============================================================|n""".format(

@@ -47,6 +47,7 @@ class CmdCreate(MuxCommand):
 
         charmax = _MAX_NR_CHARACTERS
 
+        """
         if not account.is_superuser and (
             account.db._playable_characters and len(
                 account.db._playable_characters) >= charmax
@@ -60,11 +61,14 @@ class CmdCreate(MuxCommand):
         start_location = ObjectDB.objects.get_id(settings.START_LOCATION)
         typeclass = settings.BASE_CHARACTER_TYPECLASS
         permissions = settings.PERMISSION_ACCOUNT_DEFAULT
+        """
 
-        new_character = None
+        new_character = key
+        session.new_char = new_character
 
-        EvMenu(self.caller, "menus.character_create", startnode="choose_race",
+        EvMenu(session, "menus.character_create", startnode="menunode_start",
                cmdset_mergetype="Replace", cmd_on_exit="look", auto_quit=True, auto_look=True, auto_help=True)
+        # cmd_on_exit=finish_char_callback
 
 
 class CmdGender(MuxCommand):
