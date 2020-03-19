@@ -134,8 +134,8 @@ _SKILL_DATA = {
     }
 }
 
-ALL_SKILLS = ('athletics', 'artistry', 'biotech', 'contacts', 'corpwise', 'deceive', 'empathy', 'fight', 'fronima',
-              'investigate', 'lore', 'notice', 'physique', 'pilot', 'security', 'shoot', 'stealth', 'streetwise', 'technology', 'will')
+ALL_SKILLS = ['athletics', 'artistry', 'biotech', 'contacts', 'corpwise', 'deceive', 'empathy', 'fight', 'fronima',
+              'investigate', 'lore', 'notice', 'physique', 'pilot', 'security', 'shoot', 'stealth', 'streetwise', 'technology', 'will']
 
 
 def skill_expertise_desc(character, level):

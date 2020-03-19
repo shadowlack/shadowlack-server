@@ -192,7 +192,7 @@ class Anubi(Races):
         self.min_weight = 38.56
         self.max_weight = 81.65
         self.languages = {"Odyre"}
-        self.bonuses = {'Biotech': 1, 'Lore': 1}
+        self.bonuses = {'biotech': 3, 'lore': 3}
         self.desc = "|gAnubi|n are lithe and muscular creatures who thrive in extreme desert climates. They have sharp pointed ears and long, thin tails. Strong followers of tradition, their religion and xenophobia has caused them to isolate themselves.\n\nMost Anubi would do almost anything in order to keep their ancient and royal bloodlines pure and untainted. Some have been so strong in their beliefs that the bloodline should remain pure that they have gone about trying to keep it this way through illegal cloning and genetic alterations. \n\nOnce nearly driven to extinction from a genetically engineered plague, the Anubi are still few in number. Anubi are extremely susceptible to disease due to inbreeding."
         self.colours = {'tangerine', 'rust', 'beige',
                         'silver', 'tan', 'white', 'black'}
@@ -214,7 +214,7 @@ class Aquabat(Races):
         # can change gender
         # can breathe underwater
         self.can_interbreed = False
-        self.bonuses = {'Athletics': 1, 'Notice': 1}
+        self.bonuses = {'athletics': 3, 'notice': 3}
         self.desc = "|gAquabats|n are amphibious, and spend a majority of their life in oceans, seas, inlets, and freshwater lakes. They have evolved features such as echolocation and sex-shifting to suit their aquatic environments. They have delicate features with sharp snouts and sensitive facial whiskers for seeking prey in murky waters. Their entire body is streamlined for quick swimming. Useful webbed hands and feet, as well as a rudder-like tail. Some have fins that extend off the tail, which, combined with shoulder or underarm wingspans, aid in underwater movement.\n\nAquabats have slim air bladders beneath their skin which help them float, or sink, depending on to what degree they are inflated. They have the ability to breathe through their skin, an innovation that enables them to venture safely on either land or water.\n\nFemales carry the eggs in a pouch instead of leaving them in a nest, where they could be eaten, or otherwise wash away."
         self.colours = {'green', 'blue', 'violet', 'purple', 'black'}
 
@@ -232,7 +232,7 @@ class Feydragon(Races):
         self.max_weight = 27.00
         # bonus fronima, empathy
         self.has_mutations = True
-        self.bonuses = {'Fronima': 1, 'Empathy': 1}
+        self.bonuses = {'fronima': 3, 'empathy': 3}
         self.desc = "|gFeydragons|n are an ancient subspecies with deep ties to the magic they wield, Feydragons are as widely varied as there are many kinds of magic. Most notably, the Fey are smaller; on average and when fully-grown, quadrupeds are no bigger than the red fox of late Earth, and bipeds are no taller than 1.10 metres. Fey often refer to Pendragons as tall, even if the Pendragon in question is considered short by their peers.\n\nFey always have wings and tail-flames. Fey wings are one of the most varied parts of their appearance; wings that would be biologically impossible, yet are capable of working, are not uncommon.\n\nNearly all Fey sport special Fronima-infused tattoos, often related to their bloodlines.\n\nA Feydragon must have one of the following subtypes:\n\n1.) |gKynnyn|n and |gMongrel Kynnyn|n are the most common type of Fey and are the most integrated with Ramathian society. 80% of Feydragons are of this type. Kynnyn are generalists and hold no affinity to any particular element of magic. Due to their lack of specialization, they have the ability to become more powerful than any of the other Fey subtypes. Most Kynnyn are multi-talented and often take things that others view as hobbies or or pastimes competitively.\nMongrel Kynnyn are made up of hybrids and Fey from other groups who abandoned their heritage. The practice of sending such individuals to live in Kynnyn clans is an old one, going back thousands of years.\n\n2.) |gAlanamsul|n (elemental) are the second most common subtype of Feydragon and account for 11% of the Fey population. They are followers of the religion Tanalism and specifically worship the six elemental Numegola and refer to themselves as that deity's children. Every Alanamsul's appearance is influenced by its chosen Numegola. For example, a Child of Reda will primarily take on the appearance of fire.\n\n3.) |gAzetsum|n are known for their preternatural beauty and account for 6% of the Fey population. They are so divine in appearance that they are often called angels and are universally regarded as attractive by the Ramathian population. Some wonder if they were deliberately bred for physical appearance or passively charm all those around themselves.\nAzetsum are taller than all other types of Fey, and are much more muscular looking. They are always light in colour, and sometimes have darker markings (e.g. white with black stripes or spots). The wings of the Azetsum resemble those of giant feathered birds.\nAll this, along with a culture that centres largely on worship of Tanastlasei and Fromina, has given the Azetsum an image of kindly, noble, and beautiful \"divine champions\" who struggle for the continued existence of Ramath-lehi and its people.\n\n4.) |gMyshemd|n are the most misunderstood type of Fey and make up the remaining 4% of the population. As if they exist only to contrast the Azetsum, the Myshemd are nightmarish in appearance. These demon-like Fey are often stereotyped as evil and nihilistic worshippers of Kytlekh. Myshemd come in dark colours, and sometimes have light markings (e.g. dark red with acid yellow spots). Their wings come in two different varieties: males have bat-like webbed wings, while females have bat-wings that are covered in feathers.\n\n"
 
 
@@ -248,7 +248,7 @@ class Khell(Races):
         self.min_weight = 150.00
         self.max_weight = 250.00
         self.languages = {"Khellakh"}
-        self.bonuses = {'Technology': 1, 'Fight': 1}
+        self.bonuses = {'technology': 3, 'fight': 3}
         # bonus technology, fight
         # penalty in warm places (heavy insulating fur)
 
@@ -279,7 +279,7 @@ class Pendragon(Races):
         self.max_height = 2.18
         self.min_weight = 45.35
         self.max_weight = 158.76
-        self.bonuses = {'Pilot': 1, 'Physique': 1}
+        self.bonuses = {'pilot': 3, 'physique': 3}
         # bonus physique, pilot
         # generic most "human-like" race
 
@@ -309,7 +309,7 @@ class Takula(Races):
         self.min_weight = 68.00
         self.max_weight = 113.00
         self.languages = {"Takola"}
-        self.bonuses = {'Physique': 1, 'Fight': 1}
+        self.bonuses = {'physique': 3, 'fight': 3}
         # bonus physique, fight
         self.can_interbreed = False
 
@@ -325,7 +325,7 @@ class Yki(Races):
         self.min_weight = 0
         self.max_weight = 0
         self.languages = {"Ykili"}
-        self.bonuses = {'Artistry': 1, 'Deceive': 1}
+        self.bonuses = {'artistry': 3, 'deceive': 3}
         # bonus artistry, deceive
 
 

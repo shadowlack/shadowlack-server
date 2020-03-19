@@ -81,10 +81,19 @@ def _choose_race(caller, raw_string, **kwargs):
     caller.ndb._menutree.race = race
     caller.ndb._menutree.age = 23
     caller.ndb._menutree.weight = "Average"
+
+    # create skills
+    caller.ndb._menutree.skill_choices = skills.ALL_SKILLS
     caller.ndb._menutree.skills = {}
+    for skill in caller.ndb._menutree.skill_choices:
+        caller.ndb._menutree.skills[skill] = 0
+
+    caller.ndb._menutree.allocate = 0
 
     # generate a randomized height based upon selected race
     _calculate_height(caller)
+
+    caller.msg(str(caller.ndb._menutree.skills))
 
     return "choose_gender"
 
@@ -225,18 +234,43 @@ def look_at_me(caller):
     return table, options
 
 
-def allocate_skills(caller):
+def allocate_skills(caller, raw_string, **kwargs):
 
-    allocate_count = 0
-    text_allocate = "Choose your character's strongest skill."
+    if caller.ndb._menutree.allocate == 0:
+        text = "Choose a skill |m{}|n is |ggreat|n at. This will be considered their top talent.".format(
+            caller.ndb._menutree.name)
+    elif caller.ndb._menutree.allocate >= 1 and caller.ndb._menutree.allocate <= 2:
+        text = "Choose a skill |m{}|n is |ggood|n at.".format(
+            caller.ndb._menutree.name)
+    elif caller.ndb._menutree.allocate >= 3 and caller.ndb._menutree.allocate <= 5:
+        text = "Choose a skill |m{}|n is |gfair|n at.".format(
+            caller.ndb._menutree.name)
+    elif caller.ndb._menutree.allocate >= 6 and caller.ndb._menutree.allocate <= 9:
+        text = "Choose a skill |m{}|n is |gaverage|n at.".format(
+            caller.ndb._menutree.name)
+    else:
+        text = "You shall not pass."
+        pass
 
-    text = ("Your character's skills determine... stuff.", "Help text")
+    text += (" |w{}/10 points spent.|n").format(caller.ndb._menutree.allocate)
+
+    help_text = (
+        "Your skills form a pyramid. You start with one great skill, two good skills, three fair skills, and four average skills. Your race bonuses are applied on top of your base skills.")
+
     options = []
 
-    for skill in skills.ALL_SKILLS:
+    for skill in caller.ndb._menutree.skill_choices:
+
+        # Add indicator for existing race bonus
+        bonus_text = ''
+        if skill in caller.ndb._menutree.race.bonuses:
+            bonus_text += " |g**race bonus**|n "
+
+        # Load skill data
         skill = skills.load_skill(skill)
         skill_types = ''
 
+        # Add indicator for if this skill can be used to attack and/or defend
         if skill.attack or skill.defend:
             skill_types += ' ('
             if skill.attack:
@@ -247,15 +281,47 @@ def allocate_skills(caller):
                 skill_types += "|c+Defend|n"
             skill_types += ')'
 
-        options.append({"desc": "|y{}|n. {}{}".format(skill.name, skill.desc, skill_types),
-                        "goto": (_catch_default_input)})
+        options.append({"desc": "|y{}|n. {}{}{}".format(
+            skill.name, bonus_text, skill.desc, skill_types), "goto": (_allocate_skills, {"skill": skill.name})})
 
-    return text, options
+    return (text, help_text), options
 
 
 def _allocate_skills(caller, raw_string, **kwargs):
 
-    return "look_at_me"
+    chosen_skill = kwargs.get("skill", None).lower()
+    """
+    Skill point pyramid
+    ----
+    4
+    3 3
+    2 2 2
+    1 1 1 1
+    ----
+    1 great skills (+4)
+    2 good skills (+3)
+    3 fair skills (+2)
+    4 average skills (+1)
+    """
+
+    point_assignment = [4, 3, 3, 2, 2, 2, 1, 1, 1, 1]
+
+    # Apply skill
+    caller.ndb._menutree.skills[chosen_skill] = point_assignment[caller.ndb._menutree.allocate]
+    caller.msg("|w{} skill has been successfully allocated.|n".format(
+        chosen_skill.capitalize()))
+
+    # Remove skill from future selections
+    caller.ndb._menutree.skill_choices.remove(chosen_skill)
+    caller.ndb._menutree.allocate += 1
+
+    caller.msg(str(caller.ndb._menutree.skills))
+
+    if caller.ndb._menutree.allocate == len(point_assignment):
+        caller.msg("|wAll skill points have been spent.|n")
+        return "look_at_me"
+
+    return "allocate_skills"
 
 
 def create_character():
