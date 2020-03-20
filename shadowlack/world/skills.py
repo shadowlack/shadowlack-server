@@ -138,26 +138,26 @@ ALL_SKILLS = ['athletics', 'artistry', 'biotech', 'contacts', 'corpwise', 'decei
               'investigate', 'lore', 'notice', 'physique', 'pilot', 'security', 'shoot', 'stealth', 'streetwise', 'technology', 'will']
 
 
-def skill_expertise_desc(character, level):
-    if level >= 8:
+def competency_desc(points):
+    if points >= 8:
         return "legendary"
-    elif level == 7:
+    elif points == 7:
         return "epic"
-    elif level == 6:
+    elif points == 6:
         return "fantastic"
-    elif level == 5:
+    elif points == 5:
         return "superb"
-    elif level == 4:
+    elif points == 4:
         return "great"
-    elif level == 3:
+    elif points == 3:
         return "good"
-    elif level == 2:
+    elif points == 2:
         return "fair"
-    elif level == 1:
+    elif points == 1:
         return "average"
-    elif level == 0:
+    elif points == 0:
         return "mediocre"
-    elif level == -1:
+    elif points == -1:
         return "poor"
     else:
         return "terrible"

@@ -82,18 +82,8 @@ def _choose_race(caller, raw_string, **kwargs):
     caller.ndb._menutree.age = 23
     caller.ndb._menutree.weight = "Average"
 
-    # create skills
-    caller.ndb._menutree.skill_choices = skills.ALL_SKILLS
-    caller.ndb._menutree.skills = {}
-    for skill in caller.ndb._menutree.skill_choices:
-        caller.ndb._menutree.skills[skill] = 0
-
-    caller.ndb._menutree.allocate = 0
-
     # generate a randomized height based upon selected race
     _calculate_height(caller)
-
-    caller.msg(str(caller.ndb._menutree.skills))
 
     return "choose_gender"
 
@@ -216,7 +206,12 @@ def enter_age(caller, raw_string, **kwargs):
 
 def look_at_me(caller):
 
-    # form = evform.EvForm("world/character_sheet.py")
+    # Create skills
+    caller.ndb._menutree.allocate = 0
+    caller.ndb._menutree.skill_choices = skills.ALL_SKILLS.copy()
+    caller.ndb._menutree.skills = {}
+    for skill in caller.ndb._menutree.skill_choices:
+        caller.ndb._menutree.skills[skill] = 0
 
     table = evtable.EvTable(border="incols")
     table.add_row("Name", caller.ndb._menutree.name)
@@ -229,7 +224,7 @@ def look_at_me(caller):
     table.reformat_column(0, align="r")
 
     options = (
-        {"key": "skills", "desc": "Allocate skills.", "goto": "allocate_skills"}, {"key": "age", "desc": "Change your character's age.", "goto": "enter_age"},  {"key": "height", "desc": "Not tall or short enough? Re-roll your character's height.", "goto": (_catch_default_input)}, {"key": "weight", "desc": "Adjust your character's weight (lighter, heavier, etc).", "goto": (_catch_default_input)}, {"key": ("c", "continue"), "desc": "|gContinue|n with character creation.", "goto": (_catch_default_input)}, {"key": "reset", "desc": "Reset your progress and start over character creation.", "goto": "menunode_start"}, {"key": "_default", "goto": (_catch_default_input)})
+        {"key": "age", "desc": "Change your character's age.", "goto": "enter_age"},  {"key": "height", "desc": "Not tall or short enough? Re-roll your character's height.", "goto": (_catch_default_input)}, {"key": "weight", "desc": "Adjust your character's weight (lighter, heavier, etc).", "goto": (_catch_default_input)}, {"key": "r", "desc": "Reset your progress and start over character creation.", "goto": "menunode_start"}, {"key": ("c", "continue"), "desc": "|gContinue|n with character skill allocation.", "goto": "allocate_skills"}, {"key": "_default", "goto": (_catch_default_input)})
 
     return table, options
 
@@ -264,7 +259,7 @@ def allocate_skills(caller, raw_string, **kwargs):
         # Add indicator for existing race bonus
         bonus_text = ''
         if skill in caller.ndb._menutree.race.bonuses:
-            bonus_text += " |g**race bonus**|n "
+            bonus_text += "|g**race bonus**|n "
 
         # Load skill data
         skill = skills.load_skill(skill)
@@ -283,6 +278,10 @@ def allocate_skills(caller, raw_string, **kwargs):
 
         options.append({"desc": "|y{}|n. {}{}{}".format(
             skill.name, bonus_text, skill.desc, skill_types), "goto": (_allocate_skills, {"skill": skill.name})})
+
+    options.append({"key": ("r", "_default"),
+                    "desc": "Reset skill point allocation.",
+                    "goto": "look_at_me"})
 
     return (text, help_text), options
 
@@ -319,9 +318,46 @@ def _allocate_skills(caller, raw_string, **kwargs):
 
     if caller.ndb._menutree.allocate == len(point_assignment):
         caller.msg("|wAll skill points have been spent.|n")
-        return "look_at_me"
+        return "character_sheet"
 
     return "allocate_skills"
+
+
+def character_sheet(caller, raw_string, **kwargs):
+    options = []
+    help_text = "This is your character sheet. Does everything look good to you?"
+
+    form = evform.EvForm("world/character_sheet.py")
+
+    name_string = "|m{}|n the {} {}".format(
+        caller.ndb._menutree.name, caller.ndb._menutree.height_desc, caller.ndb._menutree.race.name)
+
+    table_skillsA = evtable.EvTable(border="incols")
+    table_skillsB = evtable.EvTable(border="incols")
+
+    # Split dict list in half
+    tableA = dict(list(caller.ndb._menutree.skills.items())
+                  [:len(caller.ndb._menutree.skills) // 2])
+    tableB = dict(list(caller.ndb._menutree.skills.items())
+                  [len(caller.ndb._menutree.skills) // 2:])
+
+    bonus_text = ''
+    for skill in tableA:
+        table_skillsA.add_row(skill.capitalize(),
+                              skills.competency_desc(caller.ndb._menutree.skills[skill]))
+    for skill in tableB:
+        table_skillsB.add_row(skill.capitalize(),
+                              skills.competency_desc(caller.ndb._menutree.skills[skill]))
+
+    form.map(cells={
+        1: name_string,
+        2: "a short description",
+        3: caller.ndb._menutree.age,
+        4: caller.ndb._menutree.gender,
+        5: caller.ndb._menutree.height,
+        6: caller.ndb._menutree.weight}, tables={"A": table_skillsA, "B": table_skillsB})
+
+    return (form, help_text), options
 
 
 def create_character():
