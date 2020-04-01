@@ -402,6 +402,19 @@ def _calculate_height(caller):
     60% chance to be average height
     20% chance to be either short or tall
     """
+
+    height = random.uniform(caller.db.race.min_height,
+                            caller.db.race.max_height)
+
+    # is this a takula?
+    if caller.db.race.name == 'Takula':
+        # there is a 25% chance they are a Skink (short)
+        if random.randint(0, 100) <= 25:
+            caller.msg("|m{}|n |wis a Skink (a smaller, more dexterous, intelligent Takula). 25% of Takula are Skinks.|n".format(
+                caller.ndb._menutree.name))
+            # override race height defaults
+            height = random.uniform(0.91, 1.40)
+
     stature_deviation = ['short'] * 20 + ['tall'] * 20 + ['average'] * 60
     stature = random.choice(stature_deviation)
 
@@ -412,8 +425,6 @@ def _calculate_height(caller):
     else:
         height_var = 0.00
 
-    height = random.uniform(caller.db.race.min_height,
-                            caller.db.race.max_height)
     height = height + height_var
 
     caller.ndb._menutree.height = format(height, ".2f")

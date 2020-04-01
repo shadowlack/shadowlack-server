@@ -67,7 +67,7 @@ class Character(DefaultCharacter):
         self.db.sdesc = "An unknown stranger"
         self.db.gender = "Ambiguous"
         self.db.age = 0
-        self.db.height = 0
+        self.db.height = 0.00
         self.db.weight = "Average"
         self.db.race = None
         self.db.is_nullfire = False
