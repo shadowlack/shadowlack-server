@@ -13,10 +13,12 @@ from django.contrib.flatpages.models import FlatPage
 # List of pages to process
 pages = [
     ['/about/', 'page_about.html', 'About'],
+    ['/anti-harassment-policy/', 'page_harassment.html', 'Anti-Harassment Policy'],
     ['/legal/', 'page_legal.html', 'Terms and Conditions'],
     ['/parents/', 'page_parents.html', 'For Parents'],
     ['/privacy/', 'page_privacy.html', 'Privacy Policy'],
     ['/rules/', 'page_rules.html', 'Rules and Regulations'],
+    ['/staff-handbook/', 'page_staff.html', 'Staff Handbook'],
 ]
 
 # Loop through and create or update the pages
