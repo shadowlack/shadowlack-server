@@ -29,3 +29,9 @@ pip install mysqlclient
 evennia makemigrations
 evennia migrate
 ```
+
+## Testing
+```bash
+evennia --settings settings.py test commands
+evennia test --settings settings.py
+```
