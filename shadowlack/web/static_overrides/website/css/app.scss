@@ -1,0 +1,113 @@
+/* Scss variables */
+
+$primary-brand: #00C5DE;
+$secondary-brand: rgba(54, 62, 64, .95);
+$tertiary-brand: rgb(241,196,15);
+
+$divider-bg: rgb(242,242,242);
+
+$white: #fff;
+$light-bg: rgb(250, 250, 250);
+
+$dark-bg: rgb(54,62,64);
+$darkest-bg: rgb(44, 52, 54);
+
+/* The base font-size is set at 62.5% for having the convenience
+ of sizing rems in a way that is similar to using px: 1.6rem = 16px */
+html {
+  box-sizing: border-box;
+  font-size: 62.5%;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Ubuntu,Helvetica Neue, Helvetica, sans-serif;
+  font-size: 1.9rem;
+  font-weight: 300;
+  line-height: 1.6;
+}
+
+a, a:link, a:visited {color: $primary-brand}
+a:hover, a:focus {text-decoration: underline;}
+
+hr {
+  border: 0;
+  line-height: 1.25em;
+  margin: 0.5rem;
+  height: 1rem;
+  background: linear-gradient(to right, transparent, $primary-brand 20%, rgba(14, 143, 160, 0.616) 80%, transparent);
+}
+
+/* Mobile First Media Queries */
+.container {
+  margin: 0 auto;
+  max-width: 112.0rem;
+  padding: 0 2.0rem;
+  position: relative;
+  width: 100%;
+}
+
+/* Base style */
+
+.row {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  max-width: 112.0rem;
+  width: 100%;
+}
+
+.col {
+  display: flex;
+  flex-direction: column;
+  flex-basis: 100%;
+  flex: none;
+}
+
+/* Larger than mobile screen - 640px */
+@media (min-width: 40.0rem) {
+  .col {
+    flex: 1;
+  }
+}
+
+/* Larger than tablet screen - 1280px */
+@media (min-width: 80.0rem) { }
+
+/* Larger than desktop screen - 1920px */
+@media (min-width: 120.0rem) { }
+
+/* Print */
+@media print{
+  a:after{content:" (" attr(href) ") ";font-size:0.8em;font-weight:normal;}
+}
+
+.footer-wrapper {
+  margin-top: 6rem;
+  background-color: $dark-bg;
+  color: $white;
+  font-size: 1.5rem;
+  font-weight: 400;
+  a {
+    color: rgb(231, 231, 231);
+  }
+}
+.footer-legal {
+  padding: 1rem 0;
+}
+.footer {
+  padding: 1rem 0;
+  background-color: $darkest-bg;
+  a {
+    margin-left: 1.5rem;
+    text-decoration: none;
+    &:hover {
+      color: $primary-brand;
+    }
+  }
+}
+
+
+@import 'table';
+@import 'helpers';
