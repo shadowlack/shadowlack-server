@@ -1,5 +1,5 @@
 {% if page_obj %}
-<nav aria-hidden="false" class="pagination-wrapper" aria-label="Pagination">
+<nav class="pagination-wrapper" aria-label="Pagination" aria-hidden="false">
   <ul class="pagination">
     <li class="page-item {% if page_obj.has_previous %}{% else %}disabled{% endif %}">
       <a class="page-link" href="{% if page_obj.has_previous %}?{% if q %}q={{ q }}&{% endif %}page={{ page_obj.previous_page_number }}{% endif %}" aria-label="Previous">

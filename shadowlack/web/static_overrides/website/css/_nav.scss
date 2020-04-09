@@ -1,0 +1,22 @@
+#main-nav {
+  position: relative;
+  width: 100%;
+  .container {
+    max-width: 112.0rem;
+  }
+  ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  .nav-link {
+    .nav-toggle, a {
+      position: relative;
+      padding: 1.5rem;
+      font-size: 1.8rem;
+      font-weight: bold;
+      display: block;
+      text-decoration: none;
+    }
+  }
+}

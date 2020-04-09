@@ -18,9 +18,13 @@ table {
   }
   tbody {
     tr {
+      transition: background-color 0.5s ease-out;
       background-color: $white;
       &:nth-child(odd) {
         background-color: $light-bg;
+      }
+      &:focus-within, &:hover {
+        background-color: $focus-bg;
       }
     }
     td {

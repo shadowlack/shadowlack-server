@@ -12,6 +12,11 @@ $light-bg: rgb(250, 250, 250);
 $dark-bg: rgb(54,62,64);
 $darkest-bg: rgb(44, 52, 54);
 
+$focus-bg: #B8FF0D;
+$orange: #FF7D19;
+$purple: #BF19FF;
+$pink: #CC1472;
+
 /* The base font-size is set at 62.5% for having the convenience
  of sizing rems in a way that is similar to using px: 1.6rem = 16px */
 html {
@@ -26,6 +31,11 @@ body {
   font-size: 1.9rem;
   font-weight: 300;
   line-height: 1.6;
+}
+
+::selection {
+  background: $pink;
+  color: $white;
 }
 
 a, a:link, a:visited {color: $primary-brand}
@@ -108,6 +118,6 @@ hr {
   }
 }
 
-
+@import 'nav';
 @import 'table';
 @import 'helpers';

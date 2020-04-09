@@ -1,3 +1,18 @@
+/* Layout */
+.flex {
+  display: flex;
+}
+.flex-wrap {
+  flex-wrap: wrap;
+}
+.mx-auto {
+  margin-left: auto;
+  margin-right: auto;
+}
+.justify-between {
+  justify-content: space-between;
+}
+/* Text */
 .text-right {
   text-align: right;
 }
@@ -11,14 +26,13 @@
   text-align: justify;
   text-justify: inter-word;
 }
-
+/* Visibility */
 .visible {
   visibility: visible;
 }
 .invisible {
   visibility: hidden;
 }
-
 .sr-only {
   position: absolute; 
   width: 1px;
@@ -28,4 +42,40 @@
   overflow: hidden;
   clip: rect(0, 0, 0, 0);
   border: 0;
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+blockquote {  // Doesn't have a back color by default, can be added manually.
+  display: block;
+  position: relative;
+  font-style: italic;
+  padding: 1.5rem 3.5rem;
+  background-color: $light-bg;
+  border: 0.1rem solid $divider-bg;
+  border-left: 0.5rem solid $primary-brand;
+  &:before {
+    position: absolute;
+    top: 0.5rem;
+    left: 0;
+    font-size: 5rem;
+    font-weight: 700;
+    content: "\201c";
+    color: $primary-brand;
+  }
+  &[cite]:after{
+    font-style: normal;
+    font-weight: 700;
+    content: "\a—  " attr(cite);
+    white-space: pre;
+  }
+}
+
+code {
+  padding: 1.5rem 3.5rem;
+  background-color: $light-bg;
+  border: 0.1rem solid $divider-bg;
+  border-left: 0.5rem solid $tertiary-brand;
 }
