@@ -1,3 +1,6 @@
 [submodule "evennia"]
 	path = evennia
 	url = https://github.com/shriker/evennia
+[submodule "shadowlack/paxboards"]
+	path = shadowlack/paxboards
+	url = https://github.com/shriker/paxboards
