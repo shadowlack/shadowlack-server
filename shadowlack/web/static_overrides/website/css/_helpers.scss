@@ -49,12 +49,13 @@
 }
 
 blockquote {  // Doesn't have a back color by default, can be added manually.
+  background-color: var(--bg-accent);
+  color: var(--font-colour);
   display: block;
   position: relative;
   font-style: italic;
   padding: 1.5rem 3.5rem;
-  background-color: $light-bg;
-  border: 0.1rem solid $divider-bg;
+  border: 0.1rem solid var(--border-colour);;
   border-left: 0.5rem solid $primary-brand;
   &:before {
     position: absolute;
@@ -75,7 +76,11 @@ blockquote {  // Doesn't have a back color by default, can be added manually.
 
 code {
   padding: 1.5rem 3.5rem;
-  background-color: $light-bg;
-  border: 0.1rem solid $divider-bg;
+  background-color: var(--bg-accent);
+  border: 0.1rem solid var(--border-colour);
   border-left: 0.5rem solid $tertiary-brand;
+}
+
+b, strong {
+  font-weight: 600;
 }

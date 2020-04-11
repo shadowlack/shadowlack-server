@@ -1,3 +1,11 @@
+#nav-wrapper {
+  background-color: $dark-bg;
+  background-image: url('/static/website/images/bg-shadowlack.jpg');
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: 50% 0;
+}
+
 #main-nav {
   position: relative;
   width: 100%;
@@ -18,5 +26,111 @@
       display: block;
       text-decoration: none;
     }
+  }
+}
+
+.disclosure-nav {
+  ul {
+    min-width: 20rem;
+    padding: 0;
+    position: absolute;
+    display: block;
+    background: $white;
+    z-index: 90;
+    box-shadow: 0.1rem 0.2rem 0.5rem rgba(0,0,0, 0.2);
+    overflow: hidden;
+    border-radius: 0.5rem;
+  }
+  button {
+    align-items: center;
+    border: 1px solid transparent;
+    border-right-color: #ccc;
+    display: flex;
+    padding: 1em;
+    &::after {
+      content: "";
+      border-bottom: 0.1rem solid #000;
+      border-right: 0.1rem solid #000;
+      height: 1rem;
+      width: 1rem;
+      margin-left: 1rem;
+      transform: rotate(45deg);
+    }
+    &:focus {
+      border-color: #005a9c;
+      outline: 5px solid rgba(0, 90, 156, 0.75);
+      position: relative;
+    }
+    &:hover, &[aria-expanded=true] {
+      background-color: #005a9c;
+      color: #fff;
+    }
+    &:hover::after, &[aria-expanded=true]::after {
+      border-color: #fff;
+    }
+    &[aria-expanded=true]::after {
+      transform: rotate(225deg);
+    }
+  }
+}
+
+/*Simple css to style it like a toggle switch*/
+.theme-switch-wrapper {
+  display: flex;
+  align-items: center;
+  padding-top: 1.3rem;
+  .theme-switch {
+    display: inline-block;
+    height: 2.5rem;
+    position: relative;
+    width: 5.5rem;
+    border: 0.1rem solid rgba(255, 255, 255, .1);
+    input {
+      display:none;
+    }
+    &:hover, &:active, &:focus {
+      border-color: $primary-brand;
+    }
+  }
+  label {
+    cursor: pointer;
+  }
+}
+
+.slider {
+  background-color: $dark-bg;
+  bottom: 0;
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+  transition: .4s;
+}
+
+.slider:before {
+  bottom: 1rem;
+  content: "";
+  height: 2rem;
+  width: 2rem;
+  left: 0.4rem;
+  position: absolute;
+  transition: .4s;
+  font-size: 2rem;
+}
+
+/* On */
+input[type="checkbox"]:checked + .slider {
+  border-width: 0.1rem;
+  &::before {
+    content: "☀️";
+  }
+  &:before {
+    transform: translateX(2.1rem);
+  }
+}
+/* Off */
+input[type="checkbox"]:not(:checked) + .slider {
+  &::before {
+    content: "🌑";
   }
 }

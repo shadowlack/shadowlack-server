@@ -19,16 +19,16 @@ table {
   tbody {
     tr {
       transition: background-color 0.5s ease-out;
-      background-color: $white;
+      background-color: var(--bg-colour);
       &:nth-child(odd) {
-        background-color: $light-bg;
+        background-color: var(--bg-accent);
       }
       &:focus-within, &:hover {
         background-color: $focus-bg;
       }
     }
     td {
-      border-bottom: .1rem solid $divider-bg;
+      border-bottom: .1rem solid var(--border-colour);
       padding: 1.2rem 1.5rem;
       text-align: left;
     }
@@ -49,7 +49,7 @@ table {
       background-color: $primary-brand;
       padding: 1.2rem 1.5rem;
       text-decoration: none;
-      border: .1rem solid $divider-bg;
+      border: .1rem solid var(--border-colour);
       &:hover:not(.active) {
         background-color: $primary-brand;
       }

@@ -1,114 +1,65 @@
 {% load static %}
-<nav x-data="{ open: true }" class="bg-gray-800">
-  <div class="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8">
-    <div class="relative flex items-center justify-between h-16">
-      <div class="absolute inset-y-0 left-0 flex items-center sm:hidden">
-        <button @click="open = !open"
-          class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-700 focus:outline-none focus:bg-gray-700 focus:text-white transition duration-150 ease-in-out">
-        </button>
-      </div>
-      <div class="flex-1 flex items-center justify-center sm:items-stretch sm:justify-start">
-        <div class="flex-shrink-0">
-          <a href="/">
-            <img class="block lg:hidden h-8 w-auto" src="{% static "website/images/evennia_logo.png" %}"
-              alt="{{game_name}}" title="{{game_name}}">
-            <img class="hidden lg:block h-8 w-auto" src="{% static "website/images/evennia_logo.png" %}"
-              alt="{{game_name}}" title="{{game_name}}">
-          </a>
-        </div>
-        <div class="hidden sm:block sm:ml-6">
-          <div class="flex">
-            <a href="{% url 'characters' %}"
-              class="px-3 py-2 rounded-md text-sm font-medium leading-5 text-white bg-gray-900 focus:outline-none focus:text-white focus:bg-gray-700 transition duration-150 ease-in-out">Characters</a>
-            <a href="{% url 'channels' %}"
-              class="ml-4 px-3 py-2 rounded-md text-sm font-medium leading-5 text-gray-300 hover:text-white hover:bg-gray-700 focus:outline-none focus:text-white focus:bg-gray-700 transition duration-150 ease-in-out">Channels</a>
-            <a href="{% url 'help' %}"
-              class="ml-4 px-3 py-2 rounded-md text-sm font-medium leading-5 text-gray-300 hover:text-white hover:bg-gray-700 focus:outline-none focus:text-white focus:bg-gray-700 transition duration-150 ease-in-out">Help</a>
-            {% if webclient_enabled %}
-            <a href="{% url 'webclient:index' %}"
-              class="ml-4 px-3 py-2 rounded-md text-sm font-medium leading-5 text-gray-300 hover:text-white hover:bg-gray-700 focus:outline-none focus:text-white focus:bg-gray-700 transition duration-150 ease-in-out">Play
-              Online</a>
-            {% endif %}
-          </div>
-        </div>
-      </div>
-
-      <div class="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
-
-        {% if account %}
-        <div @click.away="open = false" class="ml-3 relative" x-data="{ open: false }">
-          <div>
-            <button @click="open = !open"
-              class="flex text-sm border-2 border-transparent rounded-full focus:outline-none focus:border-white transition duration-150 ease-in-out">
-              {% if puppet %}
-              Welcome, {{ puppet }}! <span class="text-muted">({{ account.username }})</span> <span
-                class="caret"></span>
-              {% else %}
-              Logged in as {{ account.username }} <span class="caret"></span>
-              {% endif %}
-            </button>
-          </div>
-
-          <div x-show="open" x-transition:enter="transition ease-out duration-100"
-            x-transition:enter-start="transform opacity-0 scale-95"
-            x-transition:enter-end="transform opacity-100 scale-100" x-transition:leave="transition ease-in duration-75"
-            x-transition:leave-start="transform opacity-100 scale-100"
-            x-transition:leave-end="transform opacity-0 scale-95"
-            class="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg">
-            <div class="py-1 rounded-md bg-white shadow-xs">
-              <a href="{% url 'character-create' %}"
-                class="block px-4 py-2 text-sm leading-5 text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 transition duration-150 ease-in-out">Create
-                Character</a>
-
-              <a href="{% url 'character-manage' %}"
-                class="block px-4 py-2 text-sm leading-5 text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 transition duration-150 ease-in-out">Manage
-                Characters</a>
-
-              {% for character in account.characters|slice:"10" %}
-              <a href="{{ character.web_get_puppet_url }}?next={{ request.path }}"
-                class="block px-4 py-2 text-sm leading-5 text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 transition duration-150 ease-in-out">{{ character }}</a>
-              {% empty %}
-              <a href="#">No characters found!</a>
-              {% endfor %}
-
-              <a href="{% url 'password_change' %}"
-                class="block px-4 py-2 text-sm leading-5 text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 transition duration-150 ease-in-out">Change
-                Password</a>
-              <a href="{% url 'logout' %}"
-                class="block px-4 py-2 text-sm leading-5 text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 transition duration-150 ease-in-out">Log
-                Out</a>
-            </div>
-          </div>
-
-        </div>
-        {% else %}
-        <div>
-          <a class="nav-link" href="{% url 'login' %}?next={{ request.path }}">Log In</a>
-          <a class="nav-link" href="{% url 'register' %}">Register</a>
-        </div>
-        {% endif %}
-
-      </div>
-
-
-    </div>
+<nav id="main-nav" class="main-nav" aria-label="Main">
+  <div id="top">
+    <a href="#main" class="sr-only sr-only-focusable">Skip to main content.</a>
   </div>
-  <!-- mobile -->
-  <div :class="{'block': open, 'hidden': !open}" class="hidden sm:hidden">
-    <div class="px-2 pt-2 pb-3">
-      {% block navbar_left %}
-      <a href="{% url 'characters' %}"
-        class="block px-3 py-2 rounded-md text-base font-medium text-white bg-gray-900 focus:outline-none focus:text-white focus:bg-gray-700 transition duration-150 ease-in-out">Characters</a>
-      <a href="{% url 'channels' %}"
-        class="mt-1 block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:text-white hover:bg-gray-700 focus:outline-none focus:text-white focus:bg-gray-700 transition duration-150 ease-in-out">Channels</a>
-      <a href="{% url 'help' %}"
-        class="mt-1 block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:text-white hover:bg-gray-700 focus:outline-none focus:text-white focus:bg-gray-700 transition duration-150 ease-in-out">Help</a>
-      {% if webclient_enabled %}
-      <a href="{% url 'webclient:index' %}"
-        class="mt-1 block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:text-white hover:bg-gray-700 focus:outline-none focus:text-white focus:bg-gray-700 transition duration-150 ease-in-out">Play
-        Online</a>
-      {% endif %}
+  <div class="container mx-auto flex justify-between">
+    <div class="nav-link" role="banner">
+      <a href="/">Shadowlack<!--<img src="{% static "website/images/evennia_logo.png" %}" alt="{{game_name}}" title="{{game_name}}">--></a>
     </div>
+    <ul class="flex">
+
+      <li class="nav-link disclosure-nav">
+        <button type="button" aria-expanded="true" aria-controls="nav_play">Play</button>
+        <ul id="nav_play">
+          {% if webclient_enabled %}
+          <li><a href="{% url 'webclient:index' %}">Web Client</a></li>
+          {% endif %}
+          <li><a href="/forums/">Forums</a></li>
+          <li><a href="#">More Clients...</a></li>
+        </ul>
+      </li>
+            
+      <li class="nav-link">
+        <a href="/">Codex</a>
+      </li>
+
+      <li class="nav-link disclosure-nav">
+        <button type="button" aria-expanded="true" aria-controls="nav_support">Support</button>
+        <ul id="nav_support">
+          <li><a href="{% url 'help' %}">Help</a></li>
+          <li><a href="#">Contact</a></li>
+        </ul>
+      </li>
+
+      {% if account %}
+      <li class="nav-link disclosure-nav">
+        <button type="button" aria-expanded="true" aria-controls="nav_account_menu" aria-label="Account">
+          <span aria-hidden="true">
+        {% if puppet %}
+            Welcome, {{ puppet }}! <span class="text-muted">({{ account.username }})</span>
+          {% else %}
+            {{ account.username }}
+          {% endif %}
+          </span>
+        </button>
+        <ul id="nav_account_menu">
+          <li><a href="{% url 'character-manage' %}">Manage Characters</a></li>
+          <li><a href="{% url 'character-create' %}">Create a Character</a></li>
+          <li><a href="{% url 'password_change' %}">Change Password</a></li>
+          <li><a href="{% url 'logout' %}">Log Out</a></li>
+        </ul>
+
+      </li>
+
+      {% else %}
+      <li class="nav-link">
+        <a href="{% url 'login' %}?next={{ request.path }}">Log In</a>
+      </li>
+      <li class="nav-link">
+        <a href="{% url 'register' %}">Register</a>
+      </li>
+      {% endif %}
+    </ul>
   </div>
 </nav>
-{% endblock %}

@@ -5,7 +5,6 @@
   <meta name="generator" content="Shadowlack">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="icon" type="image/x-icon" href="/static/website/images/evennia_logo.png">
-
   <link rel="stylesheet" href="{% static "website/css/normalize.css" %}" type="text/css">
   {% compress css %}
   <link type="text/x-scss" href="{% static "website/css/app.scss" %}" rel="stylesheet">
@@ -19,9 +18,9 @@
 </head>
 <body>
   {% block body %}
-
-  <div id="top"><a href="#main" class="sr-only sr-only-focusable">Skip to main content.</a></div>
+  <div id="nav-wrapper">
   {% include "website/_menu.html" %}
+  </div>
   <main class="container main-content mt-4" id="main">
     <div class="row">
       {% if sidebar %}
@@ -47,11 +46,12 @@
       <div class="container">
         <div class="row">
           <div class="col">
-            <p>Shadowlack is developed and maintained by Jodie Struthers.</p>
+            <p>Except where otherwise <a href="/licensing/">noted</a>, the player-constructed world of Shadowlack is under a Creative Commons <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/">Attribution-NonCommercial-ShareAlike 3.0 Unported license</a>. Shadowlack is developed and maintained by <a href="https://shriker.ca">Jodie Struthers</a>. </p>
+            <p>Established 2002&ndash;{% now 'Y' %}. </p>
           </div>
           <div class="col text-right">
-            <p><img src="{% static "website/images/powered-by-fate.png" %}" width="300" height="116" alt="Powered by Fate"
-            title="Powered by Fate"><br>Fate&#8482; is a trademark of Evil Hat Productions, LLC. The Powered by Fate logo is &copy; Evil Hat Productions, LLC and is used with permission.</p>
+            <p><a href="/licensing/"><img src="{% static "website/images/powered-by-fate.png" %}" width="300" height="116" alt="Powered by Fate"
+            title="Powered by Fate"></a><br>Fate&#8482; is a trademark of Evil Hat Productions, LLC. The Powered by Fate logo is &copy; Evil Hat Productions, LLC and is used with permission.</p>
           </div>
         </div>
       </div>
@@ -60,19 +60,27 @@
       <div class="container">
         <div class="row">
           <div class="col">
-            <p>Copyright &copy; Shadowlack 2002&ndash;{% now 'Y' %}.</p>
+
+            <div class="theme-switch-wrapper">
+              <label class="theme-switch" for="theme_checkbox" aria-label="Toggle between the light and dark theme." title="Toggle between the light and dark theme.">
+                <input type="checkbox" id="theme_checkbox">
+                <div class="slider"></div>
+              </label>
+            </div>
+
           </div>
-          <div class="col text-right">
+          <nav class="col text-right" id="footer-nav" aria-label="Footer">
             <p>
               <a href="/">Home</a>
               <a href="{% url 'help' %}">Help</a>
               <a href="/legal/">Terms and Conditions</a>
               <a href="/privacy/">Privacy Policy</a>
+              <a href="/licensing/">Licensing</a>
               {% if user.is_authenticated and user.is_staff %}
               <a href="{% url 'admin:index' %}">Admin</a>
               {% endif %}
             </p>
-          </div>
+          </nav>
         </div>
       </div>
     </div>
@@ -80,7 +88,7 @@
   </footer>
 
   {% endblock %}
-  <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.0.1/dist/alpine.js" defer></script>
+  <script src="{% static "website/js/app.js" %}"></script>
 </body>
 
 </html>
