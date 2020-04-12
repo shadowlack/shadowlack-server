@@ -99,8 +99,8 @@ words = [
         'desc': ("A fully grown adult female.")
     },
     {
-        'name': ("Fronima"),
-        'desc': ("1.) An energy source used for magic and machina. 2.) Where the souls of deceased Pendragons go (unless they are killed by a Rapine). 3.) The world in which nightmares and dreams exist.")
+        'name': ("Fronima Source"),
+        'desc': ("1. An energy source used for magic and machina. 2. Where the souls of deceased Ramathians go (unless they are killed by a Rapine). 3. The world in which nightmares and dreams exist.")
     },
     {
         'name': ("Fronna"),
@@ -234,14 +234,60 @@ for vulgarity in vulgarities:
     if vulgarity_entry:
         caller.msg("{} added to Help.".format(vulgarity['name']))
 
-# Climate
+# CODE
 
-seasons = [
+calendar = [
     {
         'name': ("Dyo"),
         'desc': ("Spring. The second of Ramath-lehi's four seasonal quarters.")
     },
+    {
+        'name': ("Tria"),
+        'desc': ("Summer. The third of Ramath-lehi's four seasonal quarters.")
+    },
+    {
+        'name': ("Mia"),
+        'desc': ("Winter. The first of Ramath-lehi's four seasonal quarters.")
+    },
+    {
+        'name': ("Tessera"),
+        'desc': ("Autumn. The fourth of Ramath-lehi's four seasonal quarters.")
+    },
+    {
+        'name': ("Units of Time"),
+        'desc': ("Tak (a second); Mosa (a minute); Fues (an hour); Pui (a day); Paquite (a week); Paquitten (a weekend).")
+    },
+    {
+        'name': ("Days of the Week"),
+        'desc': ("1. Fespui (equivalent to Monday).\n\n 2. Laipui.\n\n 3. Jaspui. 4.  	Penpui (middle of the week). 5. Jaipui. 6. Lidpui. 7. Fidpui (equivalent to Friday). 8. Gaipui (first day of the weekend). 9. Dympui. 10. Nerpui (last day of the weekend).")
+    },
+    {
+        'name': ("Aujli"),
+        'desc': ("Morning.")
+    },
+    {
+        'name': ("Darkli"),
+        'desc': ("Night.")
+    },
+    {
+        'name': ("Nehlt-sena"),
+        'desc': ("Daytime.")
+    },
+    {
+        'name': ("Jidp-sena"),
+        'desc': ("Nighttime.")
+    },
+    {
+        'name': ("Hatchday"),
+        'desc': ("A birthday. Also sometimes called a Hatching or a Hatchpui.")
+    },
 ]
+
+for cal in calendar:
+    cal_entry = create_help_entry(cal['name'].lower(), cal['desc'], category="Calendar", locks="view:all()")
+
+    if cal_entry:
+        caller.msg("{} added to Help.".format(cal['name']))
 
 # Languages
 languages = [
