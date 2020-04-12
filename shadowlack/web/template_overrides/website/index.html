@@ -1,6 +1,6 @@
 {% extends "website/base.html" %}
 
-{% block titleblock %}Home{% endblock %}
+{% block titleblock %}Shadowlack{% endblock %}
 
 {% block header_ext %}
 {% endblock %}
@@ -10,36 +10,17 @@
   <div class="col">
     <div class="card">
       <div class="card-body">
-        <h1 class="card-title">Welcome!</h1>
+        <h1 class="card-title">Shadowlack</h1>
 
-        <hr />
+        <hr>
+        Text-Based Accessibility
 
-        <p class="lead">
-          Welcome to your new installation of <a href="http://evennia.com">Evennia</a>, your friendly
-          neighborhood next-generation MUD development system and server.
-        </p>
-        <p>
-          You are looking at Evennia's web
-          presence, which can be expanded to a full-fledged site as needed.<br />
-          Through the <a href="{% url 'admin:index' %}">admin interface</a> you can view and edit the
-          database without logging into the game.
-        </p>
-        {% if webclient_enabled %}
-        <p>
-          You can also connect to the game directly from your browser using our
-          <a href="{% url 'webclient:index' %}">online client</a>!<br>
-        </p>
-        {% endif %}
-        <p>
-          For more info, take your time to
-          peruse our extensive online <a href="https://github.com/evennia/evennia/wiki">documentation</a>.
-        </p>
       </div>
     </div>
   </div>
 </div>
 
-<hr />
+<hr>
 
 <div class="row">
   <div class="col-12 col-md-4 mb-3">

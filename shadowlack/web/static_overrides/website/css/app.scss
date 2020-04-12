@@ -95,50 +95,12 @@ hr {
   flex: none;
 }
 
-/* Larger than mobile screen - 640px */
-@media (min-width: 40.0rem) {
-  .col {
-    flex: 1;
-  }
-}
-
-/* Larger than tablet screen - 1280px */
-@media (min-width: 80.0rem) { }
-
-/* Larger than desktop screen - 1920px */
-@media (min-width: 120.0rem) { }
-
 /* Print */
 @media print{
   a:after{content:" (" attr(href) ") ";font-size:0.8em;font-weight:normal;}
 }
 
-.footer-wrapper {
-  margin-top: 6rem;
-  background-color: $dark-bg;
-  color: $white;
-  font-size: 1.5rem;
-  font-weight: 400;
-  a {
-    color: rgb(231, 231, 231);
-  }
-}
-.footer-legal {
-  padding: 1rem 0;
-  font-size: 1.2rem;
-}
-.footer {
-  padding: 1rem 0;
-  background-color: $darkest-bg;
-  a {
-    margin-left: 1.5rem;
-    text-decoration: none;
-    &:hover {
-      color: $primary-brand;
-    }
-  }
-}
-
 @import 'nav';
 @import 'table';
 @import 'helpers';
+@import 'layout';

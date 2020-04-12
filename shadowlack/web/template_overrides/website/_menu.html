@@ -15,35 +15,57 @@
           {% if webclient_enabled %}
           <li><a href="{% url 'webclient:index' %}">Web Client</a></li>
           {% endif %}
-          <li><a href="/forums/">Forums</a></li>
           <li><a href="#">More Clients...</a></li>
         </ul>
       </li>
+
+      <li class="nav-link disclosure-nav">
+        <button type="button" aria-expanded="true" aria-controls="nav_about">About</button>
+        <ul id="nav_about">
+          <li><a href="/about/">About</a></li>
+          <li><a href="/rules/">Rules and Regulations</a></li>
+          <li><a href="/parents/">For Parents</a></li>
+          <li><a href="/anti-harassment-policy/">Anti-Harassment Policy</a></li>
+          <li><a href="/staff-handbook/">Staff Handbook</a></li>
+        </ul>
+      </li>
             
-      <li class="nav-link">
-        <a href="/">Codex</a>
+      <li class="nav-link disclosure-nav">
+        <button type="button" aria-expanded="true" aria-controls="nav_world">World</button>
+        <ul id="nav_world">
+          <li><a href="{% url 'characters' %}">Characters</a></li>
+        </ul>
+      </li>
+
+      <li class="nav-link disclosure-nav">
+        <button type="button" aria-expanded="true" aria-controls="nav_community">Community</button>
+        <ul id="nav_community">
+          <li><a href="/forums/">Forums</a></li>
+          <li><a href="#">Discord</a></li>
+          <li><a href="https://twitter.com/shadowlack">Twitter</a></li>
+          <li><a href="#">Steam Group</a></li>
+        </ul>
       </li>
 
       <li class="nav-link disclosure-nav">
         <button type="button" aria-expanded="true" aria-controls="nav_support">Support</button>
         <ul id="nav_support">
           <li><a href="{% url 'help' %}">Help</a></li>
+          <li><a href="#">Downloads</a></li>
           <li><a href="#">Contact</a></li>
         </ul>
       </li>
 
       {% if account %}
       <li class="nav-link disclosure-nav">
-        <button type="button" aria-expanded="true" aria-controls="nav_account_menu" aria-label="Account">
-          <span aria-hidden="true">
+        <button type="button" aria-expanded="true" aria-controls="nav_account" aria-label="Account">
         {% if puppet %}
-            Welcome, {{ puppet }}! <span class="text-muted">({{ account.username }})</span>
+            {{ puppet }} <span class="text-muted">({{ account.username }})</span>
           {% else %}
             {{ account.username }}
           {% endif %}
-          </span>
         </button>
-        <ul id="nav_account_menu">
+        <ul id="nav_account">
           <li><a href="{% url 'character-manage' %}">Manage Characters</a></li>
           <li><a href="{% url 'character-create' %}">Create a Character</a></li>
           <li><a href="{% url 'password_change' %}">Change Password</a></li>

@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+
+{% block titleblock %}
+{{ view.page_title }}
+{% endblock %}
+
+{% block content %}
+
+{% load addclass %}
+
+
+        <h1>{{ view.page_title }}</h1>
+
+
+        <div class="row">
+          {% regroup object_list by help_category as category_list %}
+          
+          {% if category_list %}
+          <!-- left column -->
+          <div class="col">
+            
+            <!-- intro -->
+            <div class="card">
+              <div class="card-body">
+                <p>This section of the site is a guide to understanding the mechanics behind Shadowlack.</p>
+              </div>
+            </div>
+            <!-- end intro -->
+            
+            <!-- index list -->
+            <div class="mx-3">
+              {% for help_category in category_list %}
+              <section class="card card-help">
+               <header class="card-title">
+                 <h3><a id="{{ help_category.grouper }}"></a>{{ help_category.grouper|title }}</h3>
+               </header>
+                <ul>
+                    {% for object in help_category.list %}
+                    <li><a href="{{ object.web_get_detail_url }}">{{ object|title }}</a></li>
+                    {% endfor %}
+                </ul>
+              </section>
+              {% endfor %}
+              <!-- end index list -->
+            </div>
+            
+          </div>
+          <!-- end left column -->
+          
+          <!-- right column (index) -->
+          <div class="col">
+            {% if user.is_staff %}
+            <!-- admin button -->
+            <a class="btn btn-info btn-block mb-3" href="/admin/help/helpentry/">Admin</a>
+            <!-- end admin button -->
+   
+            {% endif %}
+            
+            <div class="card mb-3">
+              <h2 class="card-header">Appendix</h2>
+              <ul class="list-group list-group-flush">
+                {% for category in category_list %}
+                <a href="#{{ category.grouper }}" class="list-group-item">{{ category.grouper|title }}</a>
+                {% endfor %}
+              </ul>
+              
+            </div>
+          </div>
+          <!-- end right column -->
+          {% else %}        
+          <div class="col-lg-12 col-sm-12">
+            <div class="alert alert-secondary" role="alert">
+              <h4 class="alert-heading">Under Construction!</h4>
+              <p>Thanks for your interest, but we're still working on developing and documenting the {{ game_name }} universe!</p>
+              <p>Check back later for more information as we publish it.</p>
+ 
+              <p class="mb-0"><a href="{% url 'index' %}" class="alert-link">Click here</a> to go back to the main page.</p>
+            </div>
+          </div>
+          {% endif %}
+          
+        </div>
+
+
+{% endblock %}

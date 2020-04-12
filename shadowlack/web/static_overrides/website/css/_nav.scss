@@ -47,6 +47,7 @@
     border-right-color: #ccc;
     display: flex;
     padding: 1em;
+    cursor: pointer;
     &::after {
       content: "";
       border-bottom: 0.1rem solid #000;

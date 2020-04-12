@@ -15,6 +15,7 @@ pages = [
     ['/about/', 'page_about.html', 'About'],
     ['/anti-harassment-policy/', 'page_harassment.html', 'Anti-Harassment Policy'],
     ['/legal/', 'page_legal.html', 'Terms and Conditions'],
+    ['/licensing/', 'page_licensing.html', 'Licensing'],
     ['/parents/', 'page_parents.html', 'For Parents'],
     ['/privacy/', 'page_privacy.html', 'Privacy Policy'],
     ['/rules/', 'page_rules.html', 'Rules and Regulations'],
