@@ -1,8 +1,75 @@
+/* Mobile First Media Queries */
+.container {
+  margin: 0 auto;
+  max-width: 112.0rem;
+  padding: 0 2.0rem;
+  width: 100%;
+}
+
+/* Base style */
+
+.bg-wrapper {
+  position: relative;
+  margin-bottom: 3rem;
+  z-index: 0;
+  .bg {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    background-color: var(--bg-accent);
+    background-image: url('/static/website/images/bg-shadowlack.jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: 50% 0;
+    clip-path: polygon(0% 0%, 100% 0%, 100% 90%, 50% 100%, 0% 90%);
+  }
+  .bg-mask {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    background: rgb(54, 62, 64);
+    opacity: .4;
+    clip-path: polygon(0% 0%, 100% 0%, 100% 90%, 50% 100%, 0% 90%);
+  }
+}
+
+.masthead {
+  user-select: none;
+  font-weight: bold;
+  display: block;
+  position: relative;
+  text-align: center;
+  min-height: 40rem;
+  color: #fff;
+  text-shadow: 0.1rem 0.1rem 0.1rem #111;
+  .masthead-content {
+    h1 {
+      text-transform: uppercase;
+      font-weight: 700;
+      font-size: 4rem;
+      line-height: 4.5rem;
+    }
+    max-width: 70rem;
+    text-align: center;
+    margin: 14rem auto 2rem auto;
+    padding: 8rem 2rem;
+    font-size: 2.2rem;
+    line-height: 1.5;
+  }
+}
+
 .card {
   border: .1rem solid var(--border-colour);
   background-color: var(--bg-accent);
   margin: 0 auto 3rem auto;
   padding: 1rem;
+  width: 100%;
+  box-sizing: border-box;
+  border-radius: 0.5rem;
 }
 
 .card-help {
@@ -17,7 +84,8 @@
   }
 }
 
-.footer-wrapper {
+#footer-wrapper {
+  user-select: none;
   margin-top: 6rem;
   background-color: $dark-bg;
   color: $white;
@@ -62,4 +130,42 @@
 /* Larger than desktop screen - 1920px */
 @media (min-width: 120.0rem) {
 
+}
+
+form {
+  label {
+    font-weight: bold;
+    display: block;
+  }
+  input, textarea, select {
+    border: .1rem solid var(--border-colour);
+    background-color: var(--bg-accent);
+    color: var(--font-colour);
+    transition: all 0.30s ease-in-out;
+    padding: 0.8rem;
+    &:focus {
+      border-color: $purple;
+      box-shadow: 0 0 0.5rem $purple;
+    }
+  }
+}
+
+.btn {
+  background-color: $primary-brand;
+  color: #fff;
+  padding: 0 2.4rem;
+  border-radius: 0.1rem;
+  font-weight: bold;
+  text-align: center;
+  cursor: pointer;
+  border: 0.1rem solid transparent;
+  transition: all 0.2s;
+  line-height: 5rem;
+  &:hover, &:focus {
+    background-color: darken($primary-brand, 10%);
+  }
+  a {
+    color: #fff;
+    text-decoration: none;
+  }
 }

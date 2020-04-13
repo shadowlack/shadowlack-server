@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block titleblock %}
+Codex
+{% endblock %}
+
+{% block content %}
+{% load addclass %}
+
+<h1>Codex</h1>
+
+<p>This section of the site is a guide to understanding the game mechanics, lore, and game lingo as it relates to Shadowlack.</p>
+
+<div class="row">
+  <div class="col-xs-12 col-md-8">
+    
+    {% for category in all_categories %}
+    <section class="card card-help" id="{{ category }}">
+      <h3>{{ category }}</h3>
+      <ul>
+        {% for topic in all_topics %}
+        {% if topic.help_category.capitalize == category %}
+        <li><a href="{% url 'codex' %}{{ topic.help_category|slugify }}/{{ topic.key|slugify }}">{{ topic.key }}</a></li>
+        {% endif %}
+        {% empty %}
+        <li>No entries found for this category.</li>
+        {% endfor %}
+      </ul>
+    </section>
+    {% endfor %}
+  </div>
+  <div class="col-xs-12 col-md-4">
+    <nav aria-label="Table of Contents" class="card">
+      <h2>Appendix</h2>
+      <ul class="list-group list-group-flush">
+        {% for category in all_categories %}
+        <a href="#{{ category }}">{{ category }}</a>
+        {% endfor %}
+      </ul>
+    </nav>
+  </div>
+</div>
+
+
+
+{% endblock %}

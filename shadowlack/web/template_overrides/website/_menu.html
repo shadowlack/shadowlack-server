@@ -10,16 +10,6 @@
     <ul class="flex">
 
       <li class="nav-link disclosure-nav">
-        <button type="button" aria-expanded="true" aria-controls="nav_play">Play</button>
-        <ul id="nav_play">
-          {% if webclient_enabled %}
-          <li><a href="{% url 'webclient:index' %}">Web Client</a></li>
-          {% endif %}
-          <li><a href="#">More Clients...</a></li>
-        </ul>
-      </li>
-
-      <li class="nav-link disclosure-nav">
         <button type="button" aria-expanded="true" aria-controls="nav_about">About</button>
         <ul id="nav_about">
           <li><a href="/about/">About</a></li>
@@ -33,26 +23,32 @@
       <li class="nav-link disclosure-nav">
         <button type="button" aria-expanded="true" aria-controls="nav_world">World</button>
         <ul id="nav_world">
+          <li><a href="{% url 'codex' %}">Codex</a></li>
           <li><a href="{% url 'characters' %}">Characters</a></li>
+          <li><a href="#">Wiki</a></li>
+          <li><a href="#">Media</a></li>
         </ul>
       </li>
 
       <li class="nav-link disclosure-nav">
         <button type="button" aria-expanded="true" aria-controls="nav_community">Community</button>
         <ul id="nav_community">
+          {% if webclient_enabled %}
+          <li><a href="{% url 'webclient:index' %}">Web Client</a></li>
+          {% endif %}
           <li><a href="/forums/">Forums</a></li>
+          <li><a href="{% url 'channels' %}">Channels</a></li>
           <li><a href="#">Discord</a></li>
           <li><a href="https://twitter.com/shadowlack">Twitter</a></li>
-          <li><a href="#">Steam Group</a></li>
+          <li><a href="https://steamcommunity.com/groups/shadowlack">Steam Group</a></li>
         </ul>
       </li>
 
       <li class="nav-link disclosure-nav">
         <button type="button" aria-expanded="true" aria-controls="nav_support">Support</button>
         <ul id="nav_support">
-          <li><a href="{% url 'help' %}">Help</a></li>
           <li><a href="#">Downloads</a></li>
-          <li><a href="#">Contact</a></li>
+          <li><a href="/contact/">Contact</a></li>
         </ul>
       </li>
 

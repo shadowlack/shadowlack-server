@@ -9,17 +9,18 @@
   {% compress css %}
   <link type="text/x-scss" href="{% static "website/css/app.scss" %}" rel="stylesheet">
   {% endcompress %}
-
   {% block header_ext %}
   {% endblock %}
-  <title>{{game_name}} -
-    {% if flatpage %}{{flatpage.title}}{% else %}{% block titleblock %}{{page_title}}{% endblock %}{% endif %}
-  </title>
+  <title>{% if flatpage %}{{flatpage.title}}{% else %}{% block titleblock %}{{page_title}}{% endblock %}{% endif %} | {{game_name}}</title>
 </head>
 <body>
+  <div id="content-wrapper">
   {% block body %}
-  <div id="nav-wrapper">
-  {% include "website/_menu.html" %}
+  <div class="bg-wrapper">
+    <div class="bg"></div>
+    <div class="bg-mask"></div>
+    {% include "website/_menu.html" %}
+    {% block header_mast %}{% endblock %}
   </div>
   <main class="container main-content mt-4" id="main">
     <div class="row">
@@ -39,17 +40,18 @@
       </div>
     </div>
   </main>
+  </div>
 
-  <footer class="footer-wrapper">
+  <footer id="footer-wrapper">
     {% block footer %}
     <div class="footer-legal">
       <div class="container">
         <div class="row">
-          <div class="col">
-            <p>Except where otherwise <a href="/licensing/">noted</a>, the player-constructed world of Shadowlack is under a Creative Commons <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/">Attribution-NonCommercial-ShareAlike 3.0 Unported license</a>. Shadowlack is developed and maintained by <a href="https://shriker.ca">Jodie Struthers</a>. </p>
+          <div class="col-xs-12 col-md-6">
+            <p>Except where otherwise <a href="/licensing/">noted</a>, the player-constructed world of Shadowlack is under a Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported license. Shadowlack is developed and maintained by <a href="https://shriker.ca">Jodie Struthers</a>. </p>
             <p>Established 2002&ndash;{% now 'Y' %}. </p>
           </div>
-          <div class="col text-right">
+          <div class="col-xs-12 col-md-6 text-right">
             <p><a href="/licensing/"><img src="{% static "website/images/powered-by-fate.png" %}" width="300" height="116" alt="Powered by Fate"
             title="Powered by Fate"></a><br>Fate&#8482; is a trademark of Evil Hat Productions, LLC. The Powered by Fate logo is &copy; Evil Hat Productions, LLC and is used with permission.</p>
           </div>
@@ -59,23 +61,21 @@
     <div class="footer">
       <div class="container">
         <div class="row">
-          <div class="col">
-
+          <div class="col-xs-12 col-md-6">
             <div class="theme-switch-wrapper">
               <label class="theme-switch" for="theme_checkbox" aria-label="Toggle between the light and dark theme." title="Toggle between the light and dark theme.">
                 <input type="checkbox" id="theme_checkbox">
                 <div class="slider"></div>
               </label>
             </div>
-
           </div>
-          <nav class="col text-right" id="footer-nav" aria-label="Footer">
+          <nav class="col-xs-12 col-md-6 text-right" id="footer-nav" aria-label="Footer">
             <p>
               <a href="/">Home</a>
-              <a href="{% url 'help' %}">Help</a>
               <a href="/legal/">Terms and Conditions</a>
               <a href="/privacy/">Privacy Policy</a>
               <a href="/licensing/">Licensing</a>
+              <a href="/contact/">Contact</a>
               {% if user.is_authenticated and user.is_staff %}
               <a href="{% url 'admin:index' %}">Admin</a>
               {% endif %}
@@ -86,9 +86,7 @@
     </div>
     {% endblock %}
   </footer>
-
   {% endblock %}
   <script src="{% static "website/js/app.js" %}"></script>
 </body>
-
 </html>

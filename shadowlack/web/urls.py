@@ -10,11 +10,16 @@ from django.urls import path, include
 from evennia.web.urls import urlpatterns
 import paxboards.urls
 
+from web.codex.views import contact_form
+
 # eventual custom patterns
 custom_patterns = [
+    path("contact/", contact_form, name="contact"),
+
     # url(r'/desired/url/', view, name='example'),
     path("", include("web.character.urls")),
-    path("forums/", include('paxboards.urls', namespace='board')),
+    path("codex/", include("web.codex.urls")),
+    path("forums/", include("paxboards.urls", namespace='board'))
 ]
 
 # this is required by Django.

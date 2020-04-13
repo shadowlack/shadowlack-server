@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block titleblock %}Contact{% endblock %}
+
+{% block content %}
+{% load addclass %}
+<h1>Contact</h1>
+
+<p>Need to contact us? Use the following form, or email us at <a href="mailto:graders@shadowlack.com">graders@shadowlack.com</a>. We will try to get back to you between one and three business days. If you require immediate assistance, we recommend that you ask your question in our Discord channel.</p>
+
+<form method="post">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <div>
+    <button type="submit" class="btn">Send Message</button>
+  </div>
+</form>
+
+{% endblock %}
