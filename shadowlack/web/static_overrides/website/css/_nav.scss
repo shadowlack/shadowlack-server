@@ -1,6 +1,5 @@
 #main-nav {
   padding: 3rem 0;
-  position: relative;
   width: 100%;
   z-index: 100;
   .container {
@@ -15,10 +14,10 @@
     display: flex;
   }
   .nav-link {
-    .nav-toggle, a {
+    position: relative;
+    a {
       transition: all 0.30s ease-in-out;
       background-color: var(--bg-accent);
-      position: relative;
       padding: 1rem 1.5rem;
       font-size: 1.5rem;
       font-weight: bold;
@@ -30,58 +29,59 @@
       }
     }
   }
-}
-
-.disclosure-nav {
-  ul {
-    min-width: 20rem;
-    position: absolute;
-    display: block;
-    z-index: 200;
-    background-color: var(--bg-accent);
-    box-shadow: 0.1rem 0.2rem 0.5rem rgba(0,0,0, 0.2);
-    overflow: hidden;
-    border-radius: 0.5rem;
-    column-count: 2;
-    column-rule: 0.1rem solid var(--border-colour);
-    column-gap: 0.1rem;
-    border: 0.1rem solid var(--border-colour);
-  }
-  button {
-    background: transparent;
-    align-items: center;
-    border: 0.1rem solid transparent;
-    display: flex;
-    padding: 1em;
-    white-space: nowrap;
-    color: #fff;
-    font-weight: bold;
-    text-shadow: 0.1rem 0.1rem 0.1rem #111;
-    transition: all 0.30s ease-in-out;
-    cursor: pointer;
-    &::after {
-      content: "";
-      border-bottom: 0.1rem solid #fff;
-      border-right: 0.1rem solid #fff;
-      height: 1rem;
-      width: 1rem;
-      margin-left: 1rem;
-      transform: rotate(45deg);
+  .disclosure-nav {
+    ul {
+      min-width: 20rem;
+      position: absolute;
+      top: 100%;
+      right: 0;
+      display: block;
+      z-index: 200;
+      background-color: var(--bg-accent);
+      box-shadow: 0.1rem 0.2rem 0.5rem rgba(0,0,0, 0.2);
+      overflow: hidden;
+      border-radius: 0.5rem;
+      column-count: 2;
+      column-rule: 0.1rem solid var(--border-colour);
+      column-gap: 0.1rem;
+      border: 0.1rem solid var(--border-colour);
     }
-    &:focus {
-      border-color: #005a9c;
-      outline: 0.5rem solid rgba(0, 90, 156, 0.75);
-      position: relative;
-    }
-    &:hover, &[aria-expanded=true] {
-      background-color: rgba(1, 1, 1, 0.6);
+    button {
+      background: transparent;
+      align-items: center;
+      border: 0.1rem solid transparent;
+      display: flex;
+      padding: 1em;
+      white-space: nowrap;
       color: #fff;
-    }
-    &:hover::after, &[aria-expanded=true]::after {
-      border-color: #fff;
-    }
-    &[aria-expanded=true]::after {
-      transform: rotate(225deg);
+      font-weight: bold;
+      text-shadow: 0.1rem 0.1rem 0.1rem #111;
+      transition: all 0.30s ease-in-out;
+      cursor: pointer;
+      &::after {
+        content: "";
+        border-bottom: 0.1rem solid #fff;
+        border-right: 0.1rem solid #fff;
+        height: 1rem;
+        width: 1rem;
+        margin-left: 1rem;
+        transform: rotate(45deg);
+      }
+      &:focus {
+        border-color: #005a9c;
+        outline: 0.5rem solid rgba(0, 90, 156, 0.75);
+        position: relative;
+      }
+      &:hover, &[aria-expanded=true] {
+        background-color: rgba(1, 1, 1, 0.6);
+        color: #fff;
+      }
+      &:hover::after, &[aria-expanded=true]::after {
+        border-color: #fff;
+      }
+      &[aria-expanded=true]::after {
+        transform: rotate(225deg);
+      }
     }
   }
 }
@@ -97,10 +97,7 @@
     position: relative;
     width: 5.5rem;
     border: 0.1rem solid rgba(255, 255, 255, .1);
-    input {
-      display:none;
-    }
-    &:hover, &:active, &:focus {
+    &:focus-within, &:hover, &:active, &:focus {
       border-color: $primary-brand;
     }
   }

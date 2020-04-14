@@ -85,6 +85,7 @@
 }
 
 #footer-wrapper {
+  border-top: .1rem solid var(--border-colour);
   user-select: none;
   margin-top: 6rem;
   background-color: $dark-bg;
@@ -94,19 +95,19 @@
   a {
     color: rgb(231, 231, 231);
   }
-}
-.footer-legal {
-  padding: 1rem 0;
-  font-size: 1.2rem;
-}
-.footer {
-  padding: 1rem 0;
-  background-color: $darkest-bg;
-  a {
-    margin-left: 1.5rem;
-    text-decoration: none;
-    &:hover {
-      color: $primary-brand;
+  .footer-legal {
+    padding: 1rem 0;
+    font-size: 1.2rem;
+  }
+  .footer {
+    padding: 1rem 0;
+    background-color: $darkest-bg;
+    a {
+      margin-left: 1.5rem;
+      text-decoration: none;
+      &:hover {
+        color: $primary-brand;
+      }
     }
   }
 }

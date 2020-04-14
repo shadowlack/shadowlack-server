@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="generator" content="Shadowlack">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="icon" type="image/x-icon" href="/static/website/images/evennia_logo.png">
+  <link rel="icon" type="image/x-icon" href="{% static 'website/images/favicon.ico' %}">
   <link rel="stylesheet" href="{% static "website/css/normalize.css" %}" type="text/css">
   {% compress css %}
   <link type="text/x-scss" href="{% static "website/css/app.scss" %}" rel="stylesheet">
@@ -25,12 +25,12 @@
   <main class="container main-content mt-4" id="main">
     <div class="row">
       {% if sidebar %}
-      <nav class="col-4">
+      <nav class="col-md-4">
         {% block sidebar %}
         {% endblock %}
       </nav>
       {% endif %}
-      <div class="{% if sidebar %}col-8{% else %}col{% endif %}">
+      <div class="{% if sidebar %}col-md-8{% else %}col{% endif %}">
         {% include 'website/messages.html' %}
 
         {% block content %}
@@ -47,11 +47,11 @@
     <div class="footer-legal">
       <div class="container">
         <div class="row">
-          <div class="col-xs-12 col-md-6">
+          <div class="col-xs-12 col-md-6 justify-center">
             <p>Except where otherwise <a href="/licensing/">noted</a>, the player-constructed world of Shadowlack is under a Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported license. Shadowlack is developed and maintained by <a href="https://shriker.ca">Jodie Struthers</a>. </p>
-            <p>Established 2002&ndash;{% now 'Y' %}. </p>
+            <p>Established 2002&ndash;{% now 'Y' %}. 🌠</p>
           </div>
-          <div class="col-xs-12 col-md-6 text-right">
+          <div class="col-xs-12 col-md-6 text-right justify-center">
             <p><a href="/licensing/"><img src="{% static "website/images/powered-by-fate.png" %}" width="300" height="116" alt="Powered by Fate"
             title="Powered by Fate"></a><br>Fate&#8482; is a trademark of Evil Hat Productions, LLC. The Powered by Fate logo is &copy; Evil Hat Productions, LLC and is used with permission.</p>
           </div>
@@ -64,8 +64,8 @@
           <div class="col-xs-12 col-md-6">
             <div class="theme-switch-wrapper">
               <label class="theme-switch" for="theme_checkbox" aria-label="Toggle between the light and dark theme." title="Toggle between the light and dark theme.">
-                <input type="checkbox" id="theme_checkbox">
-                <div class="slider"></div>
+                <input type="checkbox" id="theme_checkbox" tabindex="0" class="sr-only">
+                <div class="slider" aria-hidden="true"></div>
               </label>
             </div>
           </div>
