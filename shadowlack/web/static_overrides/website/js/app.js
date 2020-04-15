@@ -49,7 +49,7 @@ DisclosureNav.prototype.init = function () {
   var buttons = this.rootNode.querySelectorAll('button[aria-expanded][aria-controls]');
   for (var i = 0; i < buttons.length; i++) {
     var button = buttons[i];
-    var menu = button.parentNode.querySelector('ul');
+    var menu = button.parentNode.querySelector('div');
     if (menu) {
       // save ref to button and controlled menu
       this.triggerNodes.push(button);

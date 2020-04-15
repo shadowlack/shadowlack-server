@@ -22,7 +22,7 @@
     {% include "website/_menu.html" %}
     {% block header_mast %}{% endblock %}
   </div>
-  <main class="container main-content mt-4" id="main">
+  <main class="container main-content" id="main">
     <div class="row">
       {% if sidebar %}
       <nav class="col-md-4">
@@ -49,7 +49,8 @@
         <div class="row">
           <div class="col-xs-12 col-md-6 justify-center">
             <p>Except where otherwise <a href="/licensing/">noted</a>, the player-constructed world of Shadowlack is under a Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported license. Shadowlack is developed and maintained by <a href="https://shriker.ca">Jodie Struthers</a>. </p>
-            <p>Established 2002&ndash;{% now 'Y' %}. 🌠</p>
+            <p>Established 2002&ndash;{% now 'Y' %}. 🌠<br>
+              Made in Canada &middot; Fabriqué au Canada. </p>
           </div>
           <div class="col-xs-12 col-md-6 text-right justify-center">
             <p><a href="/licensing/"><img src="{% static "website/images/powered-by-fate.png" %}" width="300" height="116" alt="Powered by Fate"
@@ -63,8 +64,8 @@
         <div class="row">
           <div class="col-xs-12 col-md-6">
             <div class="theme-switch-wrapper">
-              <label class="theme-switch" for="theme_checkbox" aria-label="Toggle between the light and dark theme." title="Toggle between the light and dark theme.">
-                <input type="checkbox" id="theme_checkbox" tabindex="0" class="sr-only">
+              <label class="theme-switch" for="theme_checkbox" aria-label="Check to enable light mode. Uncheck for dark mode." title="Check to enable light mode. Uncheck for dark mode.">
+                <input type="checkbox" id="theme_checkbox" tabindex="0" class="">
                 <div class="slider" aria-hidden="true"></div>
               </label>
             </div>

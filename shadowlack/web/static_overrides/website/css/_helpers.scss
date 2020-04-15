@@ -39,6 +39,15 @@
   clip: rect(0, 0, 0, 0);
   border: 0;
 }
+.sr-only-focusable:focus {
+  position: relative;
+  width: auto;
+  height: auto;
+  clip: initial;
+  margin: inherit;
+  padding: inherit;
+  border: initial;
+}
 
 .cursor-pointer {
   cursor: pointer;

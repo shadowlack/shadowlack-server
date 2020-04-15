@@ -3,78 +3,112 @@
   <div id="top">
     <a href="#main" class="sr-only sr-only-focusable">Skip to main content.</a>
   </div>
-  <div class="container mx-auto flex justify-between">
-    <div class="nav-link" role="banner">
+
+  <div class="navigation">
+
+    <div class="logo" role="banner">
       <a href="/">Shadowlack<!--<img src="{% static "website/images/evennia_logo.png" %}" alt="{{game_name}}" title="{{game_name}}">--></a>
     </div>
-    <ul class="flex">
-
-      <li class="nav-link disclosure-nav">
-        <button type="button" aria-expanded="true" aria-controls="nav_about">About</button>
-        <ul id="nav_about">
-          <li><a href="/about/">About</a></li>
-          <li><a href="/rules/">Rules and Regulations</a></li>
-          <li><a href="/parents/">For Parents</a></li>
-          <li><a href="/anti-harassment-policy/">Anti-Harassment Policy</a></li>
-          <li><a href="/staff-handbook/">Staff Handbook</a></li>
-        </ul>
-      </li>
-            
-      <li class="nav-link disclosure-nav">
-        <button type="button" aria-expanded="true" aria-controls="nav_world">World</button>
-        <ul id="nav_world">
-          <li><a href="{% url 'codex' %}">Codex</a></li>
-          <li><a href="{% url 'characters' %}">Characters</a></li>
-          <li><a href="#">Wiki</a></li>
-          <li><a href="#">Media</a></li>
-        </ul>
+    <ul class="nav-buttons">
+      <li class="disclosure-nav">
+        <button type="button" aria-expanded="false" aria-controls="nav_about">About</button>
+        <div id="nav_about" class="mega-menu">
+          <div class="nav-content">
+            <ul>
+              <li><a href="/about/">About Shadowlack</a></li>
+              <li><a href="/rules/">Rules and Regulations</a></li>
+              <li><a href="#">Sight Impaired Players</a></li>
+              <li><a href="/parents/">Parents and Guardians</a></li>
+              <li><a href="/anti-harassment-policy/">Anti-Harassment Policy</a></li>
+              <li><a href="/licensing/">Licensing</a></li>
+              <li><a href="/staff-handbook/">Staff Handbook</a></li>
+            </ul>
+          </div>
+        </div>
       </li>
 
-      <li class="nav-link disclosure-nav">
-        <button type="button" aria-expanded="true" aria-controls="nav_community">Community</button>
-        <ul id="nav_community">
-          {% if webclient_enabled %}
-          <li><a href="{% url 'webclient:index' %}">Web Client</a></li>
-          {% endif %}
-          <li><a href="/forums/">Forums</a></li>
-          <li><a href="{% url 'channels' %}">Channels</a></li>
-          <li><a href="#">Discord</a></li>
-          <li><a href="https://twitter.com/shadowlack">Twitter</a></li>
-          <li><a href="https://steamcommunity.com/groups/shadowlack">Steam Group</a></li>
-        </ul>
+      <li class="disclosure-nav">
+        <button type="button" aria-expanded="false" aria-controls="nav_world">World</button>
+        <div id="nav_world" class="mega-menu">
+          <div class="nav-content">
+            <ul>
+              <li><a href="{% url 'codex' %}">Codex</a></li>
+              <li><a href="{% url 'characters' %}">Characters</a></li>
+              <li><a href="#">Wiki</a></li>
+              <li><a href="#">Media</a></li>
+            </ul>
+          </div>
+        </div>
       </li>
 
-      <li class="nav-link disclosure-nav">
-        <button type="button" aria-expanded="true" aria-controls="nav_support">Support</button>
-        <ul id="nav_support">
-          <li><a href="#">Downloads</a></li>
-          <li><a href="/contact/">Contact</a></li>
-        </ul>
+      <li class="disclosure-nav">
+        <button type="button" aria-expanded="false" aria-controls="nav_community">Community</button>
+        <div id="nav_community" class="mega-menu">
+          <div class="nav-content">
+            <ul>
+              {% if webclient_enabled %}
+              <li><a href="{% url 'webclient:index' %}">Web Client</a></li>
+              {% endif %}
+              <li><a href="/forums/">Forums</a></li>
+              <li><a href="{% url 'channels' %}">Channels</a></li>
+            </ul>
+            <ul>
+              <li><a href="#">Discord</a></li>
+              <li><a href="https://twitter.com/shadowlack">Twitter</a></li>
+              <li><a href="https://steamcommunity.com/groups/shadowlack">Steam Group</a></li>
+            </ul>
+          </div>
+        </div>
+      </li>
+
+      <li class="disclosure-nav">
+        <button type="button" aria-expanded="false" aria-controls="nav_support">Support</button>
+        <div id="nav_support" class="mega-menu">
+          <div class="nav-content">
+            <ul>
+              <li><a href="#">Frequently Asked Questions</a></li>
+              <li><a href="#">Downloads</a></li>
+              <li><a href="/contact/">Contact</a></li>
+            </ul>
+          </div>
+        </div>
       </li>
 
       {% if account %}
-      <li class="nav-link disclosure-nav">
-        <button type="button" aria-expanded="true" aria-controls="nav_account" aria-label="Account">
+      <li class="disclosure-nav">
+        <button type="button" aria-expanded="false" aria-controls="nav_account">
         {% if puppet %}
             {{ puppet }} <span class="text-muted">({{ account.username }})</span>
           {% else %}
             {{ account.username }}
           {% endif %}
         </button>
-        <ul id="nav_account">
-          <li><a href="{% url 'character-manage' %}">Manage Characters</a></li>
-          <li><a href="{% url 'character-create' %}">Create a Character</a></li>
-          <li><a href="{% url 'password_change' %}">Change Password</a></li>
-          <li><a href="{% url 'logout' %}">Log Out</a></li>
-        </ul>
+        <div id="nav_account" class="mega-menu">
+          <div class="nav-content">
+            <ul>
+              <li><a href="{% url 'character-manage' %}">Manage Characters</a></li>
+              <li><a href="{% url 'character-create' %}">Create a Character</a></li>
+              <li><a href="{% url 'password_change' %}">Change Password</a></li>
+              <li><a href="{% url 'logout' %}">Log Out</a></li>
+            </ul>
 
+            <ul>
+              {% for character in account.characters|slice:"10" %}
+              <li><a href="{{ character.web_get_puppet_url }}?next={{ request.path }}">{{ character }}</a></li>
+              {% empty %}
+              <li>No characters found.</li>
+              {% endfor %}
+            </ul>
+
+          </div>
+        </div>
       </li>
 
       {% else %}
-      <li class="nav-link">
+      <li class="login">
         <a href="{% url 'login' %}?next={{ request.path }}">Log In</a>
       </li>
-      <li class="nav-link">
+      <li class="register">
         <a href="{% url 'register' %}">Register</a>
       </li>
       {% endif %}

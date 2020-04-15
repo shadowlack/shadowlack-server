@@ -18,11 +18,8 @@
     right: 0;
     top: 0;
     bottom: 0;
-    background-color: var(--bg-accent);
-    background-image: url('/static/website/images/bg-shadowlack.jpg');
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-position: 50% 0;
+    background: var(--bg-accent) url('/static/website/images/bg-shadowlack.jpg') top center no-repeat;
+    background-size: cover;
     clip-path: polygon(0% 0%, 100% 0%, 100% 90%, 50% 100%, 0% 90%);
   }
   .bg-mask {
@@ -114,13 +111,25 @@
 
 /* Larger than mobile screen - 640px */
 @media (min-width: 40.0rem) {
-  .col {
-    flex: 1;
+  #main-nav {
+    .navigation {
+      display: flex;
+      .nav-buttons {
+        display: flex;
+        justify-content: flex-end;
+      }
+    }
+    .disclosure-nav {
+      button {
+        width: auto;
+      }
+    }
   }
 }
 
 /* Larger than tablet screen - 1280px */
 @media (min-width: 80.0rem) {
+
   .card-help {
     ul {
       column-count: 3;

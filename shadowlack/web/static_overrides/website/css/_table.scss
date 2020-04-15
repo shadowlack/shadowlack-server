@@ -24,7 +24,7 @@ table {
         background-color: var(--bg-accent);
       }
       &:focus-within, &:hover {
-        background-color: $focus-bg;
+        background-color: $focus-colour;
       }
     }
     td {

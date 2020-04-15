@@ -6,7 +6,7 @@ $tertiary-brand: rgb(241,196,15);
 /* Global colours */
 $dark-bg: #1f1f33;
 $darkest-bg: darken(#161625, 5%);
-$focus-bg: #B8FF0D;
+$focus-colour: #B8FF0D;
 $orange: #FF7D19;
 $purple: #BF19FF;
 $pink: #CC1472;
@@ -74,12 +74,16 @@ a, a:link, a:visited {
   color: $primary-brand;
   font-weight: 600;
 }
-a:hover, a:focus {text-decoration: underline;}
+a:focus {
+  border-color: $focus-colour;
+  outline: 0.5rem solid rgba($focus-colour, 0.75);
+  position: relative;
+}
 
 hr {
   border: 0;
   line-height: 1.25em;
-  margin: 0.5rem;
+  margin: 0.5rem 0.5rem 3rem 0.5rem;
   height: 1rem;
   background: linear-gradient(to right, transparent, $primary-brand 20%, rgba(14, 143, 160, 0.616) 80%, transparent);
 }

@@ -2,51 +2,26 @@
   padding: 3rem 0;
   width: 100%;
   z-index: 100;
-  .container {
+  position: relative;
+  margin: 0 auto;
+  .navigation {
+    align-items: stretch;
+    justify-content: space-between;
     max-width: 112.0rem;
+    margin: 0 auto;
+    .logo, .login, .register {
+      padding: 1em;
+    }
   }
   ul {
     list-style: none;
     padding: 0;
     margin: 0;
   }
-  .flex {
-    display: flex;
-  }
-  .nav-link {
-    position: relative;
-    a {
-      transition: all 0.30s ease-in-out;
-      background-color: var(--bg-accent);
-      padding: 1rem 1.5rem;
-      font-size: 1.5rem;
-      font-weight: bold;
-      display: block;
-      text-decoration: none;
-      &:hover, &:active, &:focus {
-        background-color: var(--bg-colour);
-        color: var(--font-colour);
-      }
-    }
-  }
   .disclosure-nav {
-    ul {
-      min-width: 20rem;
-      position: absolute;
-      top: 100%;
-      right: 0;
-      display: block;
-      z-index: 200;
-      background-color: var(--bg-accent);
-      box-shadow: 0.1rem 0.2rem 0.5rem rgba(0,0,0, 0.2);
-      overflow: hidden;
-      border-radius: 0.5rem;
-      column-count: 2;
-      column-rule: 0.1rem solid var(--border-colour);
-      column-gap: 0.1rem;
-      border: 0.1rem solid var(--border-colour);
-    }
     button {
+      max-width: 100%;
+      min-width: 100%;
       background: transparent;
       align-items: center;
       border: 0.1rem solid transparent;
@@ -59,87 +34,121 @@
       transition: all 0.30s ease-in-out;
       cursor: pointer;
       &::after {
-        content: "";
-        border-bottom: 0.1rem solid #fff;
-        border-right: 0.1rem solid #fff;
-        height: 1rem;
-        width: 1rem;
         margin-left: 1rem;
-        transform: rotate(45deg);
+        border-color: #fff transparent transparent;
+        border-style: solid;
+        border-width: 0.5rem 0.5rem 0;
+        content: "";
+        transition: transform .3s cubic-bezier(.4,0,.2,1);
+        transform: rotate(0);
       }
       &:focus {
-        border-color: #005a9c;
-        outline: 0.5rem solid rgba(0, 90, 156, 0.75);
+        border-color: $focus-colour;
+        outline: 0.5rem solid rgba($focus-colour, 0.75);
         position: relative;
       }
       &:hover, &[aria-expanded=true] {
         background-color: rgba(1, 1, 1, 0.6);
         color: #fff;
       }
-      &:hover::after, &[aria-expanded=true]::after {
-        border-color: #fff;
-      }
       &[aria-expanded=true]::after {
-        transform: rotate(225deg);
+        transform: rotate(180deg);
+      }
+    }
+    .mega-menu {
+      z-index: 200;
+      position: absolute;
+      left: 0;
+      text-align: left;
+      width: 100%;
+      margin: 0;
+      padding: 1.5rem;
+      box-sizing: border-box;
+      background-color: var(--bg-accent);
+      box-shadow: 0.1rem 0.2rem 0.5rem rgba(0,0,0, 0.2);
+      display: none;
+      .nav-content {
+        width: 100%;
+        max-width: 128rem;
+        margin: 0 auto;
+
+        column-count: 2;
+        column-rule: 0.1rem solid var(--border-colour);
+        column-gap: 0.1rem;
+
+        a {
+          display: block;
+          transition: all 0.30s ease-in-out;
+          background-color: var(--bg-accent);
+          padding: 1rem 1.5rem;
+          font-size: 1.5rem;
+          font-weight: bold;
+          text-decoration: none;
+          &:hover, &:active {
+            background-color: var(--bg-colour);
+            color: var(--font-colour);
+          }
+          &:focus {
+            border-color: $focus-colour;
+            outline: 0.5rem solid rgba($focus-colour, 0.75);
+            position: relative;
+          }
+        }
       }
     }
   }
 }
 
-/*Simple css to style it like a toggle switch*/
+/* Dark/light modew switcher */
 .theme-switch-wrapper {
   display: flex;
   align-items: center;
   padding-top: 1.3rem;
   .theme-switch {
     display: inline-block;
-    height: 2.5rem;
+    height: 3.5rem;
     position: relative;
     width: 5.5rem;
-    border: 0.1rem solid rgba(255, 255, 255, .1);
+    border: 0.1rem solid var(--border-colour);
     &:focus-within, &:hover, &:active, &:focus {
-      border-color: $primary-brand;
+      border-color: $focus-colour;
     }
   }
   label {
     cursor: pointer;
   }
-}
-
-.slider {
-  background-color: $dark-bg;
-  bottom: 0;
-  left: 0;
-  position: absolute;
-  right: 0;
-  top: 0;
-  transition: .4s;
-}
-
-.slider:before {
-  bottom: 1rem;
-  content: "";
-  height: 2rem;
-  width: 2rem;
-  left: 0.4rem;
-  position: absolute;
-  transition: .4s;
-  font-size: 2rem;
-}
-
-/* On */
-input[type="checkbox"]:checked + .slider {
-  border-width: 0.1rem;
-  &::before {
-    content: "☀️";
+  .slider {
+    background-color: $dark-bg;
+    bottom: 0;
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+    transition: .4s;
+    &:before {
+      content: "";
+      width: 2rem;
+      left: 0.4rem;
+      position: absolute;
+      transition: .4s;
+      font-size: 2rem;
+    }
   }
-  &:before {
-    transform: translateX(2.1rem);
+  /* On */
+  input[type="checkbox"]:checked + .slider {
+
+    &::before {
+      content: "☀️";
+    }
+    &:before {
+      transform: translateX(2.2rem);
+    }
   }
-}
-/* Off */
-input[type="checkbox"]:not(:checked) + .slider {
-  &::before {
-    content: "🌑";
+  /* Off */
+  input[type="checkbox"]:not(:checked) + .slider {
+    &::before {
+      content: "🌑";
+      transform: translateX(-0.2rem);
+    }
   }
 }
