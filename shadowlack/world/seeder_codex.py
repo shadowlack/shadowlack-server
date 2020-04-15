@@ -1,6 +1,6 @@
-# shadowlack/world/batchcode_help.py
+# shadowlack/world/seeder_codex.py
 # run as super user:
-# batchcode batchcode_help
+# batchcode seeder_codex
 
 # HEADER
 

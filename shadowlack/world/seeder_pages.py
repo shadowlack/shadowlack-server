@@ -1,6 +1,6 @@
-# shadowlack/world/batchcode_pages.py
+# shadowlack/world/seeder_pages.py
 # run as super user:
-# batchcode batchcode_pages
+# batchcode seeder_pages
 
 # HEADER
 
