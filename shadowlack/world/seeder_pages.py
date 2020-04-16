@@ -12,14 +12,21 @@ from django.contrib.flatpages.models import FlatPage
 
 # List of pages to process
 pages = [
-    ['/about/', 'page_about.html', 'About'],
-    ['/anti-harassment-policy/', 'page_harassment.html', 'Anti-Harassment Policy'],
-    ['/legal/', 'page_legal.html', 'Terms and Conditions'],
-    ['/licensing/', 'page_licensing.html', 'Licensing'],
-    ['/parents/', 'page_parents.html', 'For Parents'],
-    ['/privacy/', 'page_privacy.html', 'Privacy Policy'],
-    ['/rules/', 'page_rules.html', 'Rules and Regulations'],
-    ['/staff-handbook/', 'page_staff.html', 'Staff Handbook'],
+
+    # About pages
+    ['/about/', 'page_about.html', 'About', 'flatpages/about.html'],
+    ['/anti-harassment-policy/', 'page_harassment.html',
+        'Anti-Harassment Policy', 'flatpages/about.html'],
+    ['/parents/', 'page_parents.html', 'For Parents', 'flatpages/about.html'],
+    ['/rules/', 'page_rules.html', 'Rules and Regulations', 'flatpages/about.html'],
+    ['/licensing/', 'page_licensing.html', 'Licensing', 'flatpages/about.html'],
+    ['/staff-handbook/', 'page_staff.html',
+        'Staff Handbook', 'flatpages/about.html'],
+
+    # Misc
+    ['/legal/', 'page_legal.html', 'Terms and Conditions', ''],
+    ['/privacy/', 'page_privacy.html', 'Privacy Policy', ''],
+    
 ]
 
 # Loop through and create or update the pages
@@ -30,6 +37,7 @@ for page in pages:
 
     obj.title = page[2]
     obj.content = page_content
+    obj.template_name = page[3]
     obj.save()
 
     if created:
