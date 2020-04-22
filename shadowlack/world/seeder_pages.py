@@ -15,6 +15,7 @@ pages = [
 
     # About pages
     ['/about/', 'page_about.html', 'About', 'flatpages/about.html'],
+    ['/accessibility/', 'page_accessibility.html', 'Accessibility', 'flatpages/about.html'],
     ['/anti-harassment-policy/', 'page_harassment.html',
         'Anti-Harassment Policy', 'flatpages/about.html'],
     ['/parents/', 'page_parents.html', 'For Parents', 'flatpages/about.html'],
