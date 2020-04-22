@@ -23,14 +23,14 @@
     {% block header_mast %}{% endblock %}
   </div>
   <main class="container main-content" id="main">
-    <div class="row">
+
       {% if sidebar %}
-      <nav class="col-md-4">
+      <nav class="col-xs-12 col-md-4">
         {% block sidebar %}
         {% endblock %}
       </nav>
       {% endif %}
-      <div class="{% if sidebar %}col-md-8{% else %}col{% endif %}">
+      <div class="{% if sidebar %} {% else %} {% endif %}">
         {% include 'website/messages.html' %}
 
         {% block content %}
@@ -38,7 +38,7 @@
 
         {% include 'website/pagination.html' %}
       </div>
-    </div>
+
   </main>
   </div>
 
@@ -48,7 +48,7 @@
       <div class="container">
         <div class="row">
           <div class="col-xs-12 col-md-6 justify-center">
-            <p>Except where otherwise <a href="/licensing/">noted</a>, the player-constructed world of Shadowlack is under a Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported license. Shadowlack is developed and maintained by <a href="https://shriker.ca">Jodie Struthers</a>. </p>
+            <p>Except where otherwise <a href="/licensing/">noted</a>, the player-constructed world of Shadowlack is under a Creative Commons Attribution-NonCommercial-ShareAlike 4.0 Unported license. Shadowlack is developed and maintained by <a href="https://shriker.ca">Jodie Struthers</a>. </p>
             <p>Established 2002&ndash;{% now 'Y' %}. 🌠<br>
               Made in Canada &middot; Fabriqué au Canada. </p>
           </div>
