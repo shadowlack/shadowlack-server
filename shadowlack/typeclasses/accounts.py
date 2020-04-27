@@ -22,8 +22,15 @@ several more options for customizing the Guest account system.
 
 """
 
-from evennia import DefaultAccount, DefaultGuest
+from django.conf import settings
 
+from evennia import DefaultAccount, DefaultGuest
+from evennia.utils.utils import lazy_property, to_str, make_iter, is_iter, variable_from_module
+
+_MULTISESSION_MODE = settings.MULTISESSION_MODE
+_MAX_NR_CHARACTERS = settings.MAX_NR_CHARACTERS
+_CMDSET_ACCOUNT = settings.CMDSET_ACCOUNT
+_MUDINFO_CHANNEL = None
 
 class Account(DefaultAccount):
     """
@@ -91,8 +98,133 @@ class Account(DefaultAccount):
      at_server_shutdown()
 
     """
+    def at_post_login(self, session=None):
+        """
+        This is called when a user connects to the game client.
+        """
 
-    pass
+        self.msg("Welcome to Shadowlack.")
+        self.msg(
+            self.at_look(target=self.db._playable_characters, session=session), session=session
+        )
+
+    def at_look(self, target=None, session=None, **kwargs):
+        """
+        Called when this object executes a look. It allows to customize
+        just what this means.
+
+        Args:
+            target (Object or list, optional): An object or a list
+                objects to inspect.
+            session (Session, optional): The session doing this look.
+            **kwargs (dict): Arbitrary, optional arguments for users
+                overriding the call (unused by default).
+
+        Returns:
+            look_string (str): A prepared look string, ready to send
+                off to any recipient (usually to ourselves)
+
+        """
+
+        if target and not is_iter(target):
+            # single target - just show it
+            if hasattr(target, "return_appearance"):
+                return target.return_appearance(self)
+            else:
+                return "{} has no in-game appearance.".format(target)
+        else:
+            # list of targets - make list to disconnect from db
+            characters = list(tar for tar in target if tar) if target else []
+            sessions = self.sessions.all()
+            if not sessions:
+                # no sessions, nothing to report
+                return ""
+            is_su = self.is_superuser
+
+            # text shown when looking in the ooc area
+            result = [f"Hi, |g{self.key}|n. You are out of character."]
+
+            nsess = len(sessions)
+            result.append(
+                nsess == 1
+                and "\n\n|wConnected session:|n"
+                or f"\n\n|wConnected sessions ({nsess}):|n"
+            )
+            for isess, sess in enumerate(sessions):
+                csessid = sess.sessid
+                addr = "%s (%s)" % (
+                    sess.protocol_key,
+                    isinstance(sess.address, tuple) and str(
+                        sess.address[0]) or str(sess.address),
+                )
+                result.append(
+                    "\n %s %s"
+                    % (
+                        session
+                        and session.sessid == csessid
+                        and "|w* %s|n" % (isess + 1)
+                        or "  %s" % (isess + 1),
+                        addr,
+                    )
+                )
+            result.append("\n\n |yhelp|n - List help entries and commands that are available to you.")
+            
+
+            charmax = _MAX_NR_CHARACTERS
+
+            if is_su or len(characters) < charmax:
+                if not characters:
+                    result.append(
+                        "\n\n You don't have any characters yet. See |yhelp create|n for creating one."
+                    )
+                else:
+                    result.append(
+                        "\n |ycreate|n |w<name>|n - Create a new character.")
+
+            if characters:
+                string_s_ending = len(characters) > 1 and "s" or ""
+                result.append(
+                    "\n |yic|n |w<name>|n - Go in character as <name>.")
+                result.append("\n |yooc|n - Return out of character.")
+                result.append(
+                    "\n |ywho|n - List who is currently online.")
+                result.append(
+                    "\n |yquit|n - Quit the game client.")
+                if is_su:
+                    result.append(
+                        f"\n\n|gAvailable character{string_s_ending}|n ({len(characters)}/unlimited):"
+                    )
+                else:
+                    result.append(
+                        "\n\n|gAvailable character%s%s:|n"
+                        % (
+                            string_s_ending,
+                            charmax > 1 and " (%i/%i)" % (len(characters),
+                                                          charmax) or "",
+                        )
+                    )
+
+                for char in characters:
+                    csessions = char.sessions.all()
+                    if csessions:
+                        for sess in csessions:
+                            # character is already puppeted
+                            sid = sess in sessions and sessions.index(sess) + 1
+                            if sess and sid:
+                                result.append(
+                                    f"\n - |G{char.key}|n [{', '.join(char.permissions.all())}] (played by you in session {sid})"
+                                )
+                            else:
+                                result.append(
+                                    f"\n - |R{char.key}|n [{', '.join(char.permissions.all())}] (played by someone else)"
+                                )
+                    else:
+                        # character is "free to puppet"
+                        result.append(
+                            f"\n - |m{char.key}|n [{', '.join(char.permissions.all())}]")
+            look_string = ("-" * 68) + "\n" + \
+                "".join(result) + "\n" + ("-" * 68)
+            return look_string
 
 
 class Guest(DefaultGuest):

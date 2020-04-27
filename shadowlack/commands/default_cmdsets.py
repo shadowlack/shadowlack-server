@@ -19,7 +19,9 @@ from evennia import default_cmds
 from commands.base.help import CmdHelp
 from commands.character import CmdGender, CmdCreate
 from commands.roleplay import RPSystemCmdSet
+from evennia.commands.default import batchprocess
 
+from paxboards.commands import add_forum_commands
 
 class CharacterCmdSet(default_cmds.CharacterCmdSet):
     """
@@ -58,11 +60,19 @@ class AccountCmdSet(default_cmds.AccountCmdSet):
         self.add_overridden_commands()
         self.add(CmdCreate())
 
+        # Batchprocessor commands
+        self.add(batchprocess.CmdBatchCommands())
+        self.add(batchprocess.CmdBatchCode())
+
+        # Add forum commands
+        add_forum_commands(self)
+
     def add_overridden_commands(self):
         self.add(CmdHelp())
+       
         self.remove(default_cmds.CmdCharCreate())
         self.remove(default_cmds.CmdCharDelete())
-        self.remove(default_cmds.CmdColorTest())
+        # self.remove(default_cmds.CmdColorTest())
 
 
 class UnloggedinCmdSet(default_cmds.UnloggedinCmdSet):
