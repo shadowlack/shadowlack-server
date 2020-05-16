@@ -44,18 +44,22 @@
   color: #fff;
   text-shadow: 0.1rem 0.1rem 0.1rem #111;
   .masthead-content {
-    h1 {
-      text-transform: uppercase;
-      font-weight: 700;
-      font-size: 4rem;
-      line-height: 4.5rem;
-    }
     max-width: 70rem;
     text-align: center;
     margin: 14rem auto 2rem auto;
     padding: 8rem 2rem;
     font-size: 2.2rem;
     line-height: 1.5;
+    h1 {
+      text-transform: uppercase;
+      font-weight: 700;
+      font-size: 4rem;
+      line-height: 4.5rem;
+    }
+    p {
+      width: auto;
+      max-width: 100%;
+    }
   }
 }
 
