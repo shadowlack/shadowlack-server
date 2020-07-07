@@ -16,7 +16,7 @@ from evennia.utils.utils import lazy_property, make_iter, variable_from_module
 
 from evennia.contrib.rpsystem import RecogHandler, SdescHandler
 
-from world import races, skills, characteristics
+from world import species, skills, characteristics
 
 GENDER_PRONOUN_MAP = {
     "female": {"s": "she", "o": "her", "p": "her", "a": "hers"},
@@ -69,7 +69,7 @@ class Character(DefaultCharacter):
         self.db.age = 0
         self.db.height = 0.00
         self.db.weight = "Average"
-        self.db.race = None
+        self.db.species = None
         # self.db.is_nullfire = False
 
         self.characteristics.init_characteristics()
@@ -107,14 +107,14 @@ class Character(DefaultCharacter):
             return True
 
         @property
-        def race(self):
-            return self.db.race.name if self.db.race else "Pendragon"
+        def species(self):
+            return self.db.species.name if self.db.species else "Pendragon"
 
         def age_description(self):
-            return self.db.race.age_description(self.db.age)
+            return self.db.species.age_description(self.db.age)
 
         def height_description(self):
-            return self.db.race.height_description(self.db.height)
+            return self.db.species.height_description(self.db.height)
 
         @lazy_property
         def characteristics(self):

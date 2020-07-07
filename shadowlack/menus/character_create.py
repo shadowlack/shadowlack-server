@@ -9,80 +9,84 @@ from evennia.server.sessionhandler import SESSIONS
 from evennia.utils import evtable, evform, fill, dedent, utils, create, logger, search
 from evennia.utils.evmenu import EvMenu, list_node, get_input
 
-from world import races, skills
+from world import species, skills
 
 
 def menunode_start(caller, raw_string, **kwargs):
     """
-    1. Choose your character's race.
+    1. Choose your character's species.
     """
     caller.ndb._menutree.name = caller.new_char
 
+    #("cmdname", (args), {kwargs})
+    #caller.msg(character_pane=((1, 2, 3, 4), {"foo": "bar"}))
+    #caller.msg(message="text", type="character")
+    
     text = dedent("""
         |cWelcome to Shadowlack's character creation.|n
 
-        To begin, please choose |m{}'s|n race. Choosing a race will bring up a race fact sheet. Type |yhelp|n at any time for more information.""").format(caller.ndb._menutree.name)
+        To begin, please choose |m{}'s|n species. Choosing a species will bring up a species fact sheet. Type |yhelp|n at any time for more information.""").format(caller.ndb._menutree.name)
     help_text = fill(
-        "Your race determines some of your starting stats and bonus skills.")
+        "Your species determines some of your starting stats and bonus skills.")
     options = []
 
-    for race in races.ALL_RACES:
-        race = races.load_race(race)
-        options.append({"desc": "{:<70.70s}...".format(race._desc),
-                        "goto": "menunode_display_race"})
+    for sp in species.ALL_SPECIES:
+        sp = species.load_species(sp)
+        options.append({"desc": "{:<70.70s}...".format(sp._desc),
+                        "goto": "menunode_display_species"})
 
     # Only admins may create Rapine
     """
     if caller.check_permstring("Admin"):
         options.append({"key": ("ra", "Rapine", "Rap"), "desc": "|404Rapine (Admin)|n", "goto": (
-            menunode_display_race, {"race": "Rapine"})})
+            menunode_display_species, {"species": "Rapine"})})
     """
     return (text, help_text), options
 
 
-def menunode_display_race(caller, raw_string):
+def menunode_display_species(caller, raw_string):
     """
-    2. Display race selection. Has info about race and bonuses.
+    2. Display species selection. Has info about species and bonuses.
     """
     raw_string = raw_string.strip()
 
-    if raw_string.isdigit() and int(raw_string) <= len(races.ALL_RACES):
-        race = races.ALL_RACES[int(raw_string) - 1]
-        race = races.load_race(race)
-        caller.ndb._menutree.race = race
+    if raw_string.isdigit() and int(raw_string) <= len(species.ALL_SPECIES):
+        char_species = species.ALL_SPECIES[int(raw_string) - 1]
+        char_species = species.load_species(char_species)
+        caller.ndb._menutree.species = char_species
 
-    race = caller.ndb._menutree.race
+    char_species = caller.ndb._menutree.species
 
-    text = race.desc
+    text = char_species.desc
     options = [{"key": ("c", "continue"), "desc": "|gContinue|n character creation with {}.".format(
-        race.plural_name), "goto": (_choose_race, {"race": race.name})}]
+        char_species.plural_name), "goto": (_choose_species, {"species": char_species.name})}]
 
     options.append({"key": ("r", "_default"),
-                    "desc": "Return to race selection.",
+                    "desc": "Return to species selection.",
                     "goto": "menunode_start"})
 
     return text, options
 
 
-def _choose_race(caller, raw_string, **kwargs):
+def _choose_species(caller, raw_string, **kwargs):
     """
-    3. Confirm race selection
+    3. Confirm species selection
     """
-    chosen_race = kwargs.get("race", None)
+    chosen_species = kwargs.get("species", None)
 
-    if not chosen_race:
+    if not chosen_species:
         caller.error_echo(
-            "Something went wrong with race selection.")
+            "Something went wrong with species selection.")
         return "menunode_start"
 
     # default character here
-    race = races.load_race(chosen_race)
-    caller.db.race = race
-    caller.ndb._menutree.race = race
+    char_species = species.load_species(chosen_species)
+    caller.db.species = char_species
+    caller.ndb._menutree.species = char_species
     caller.ndb._menutree.age = 23
     caller.ndb._menutree.weight = "Average"
 
-    # generate a randomized height based upon selected race
+    # generate a randomized height based upon selected species
     _calculate_height(caller)
 
     return "choose_gender"
@@ -112,7 +116,7 @@ def choose_gender(caller):
          "goto": (_choose_gender, {"gender": "Neutral"})},
         {"key": ("a"), "desc": "Ambiguous - they/them/theirs", "goto": (_choose_gender, {"gender": "Ambiguous"})}]
     options.append({"key": ("r", "_default"),
-                    "desc": "Return to race selection.", "goto": "menunode_start"})
+                    "desc": "Return to species selection.", "goto": "menunode_start"})
 
     return text, options
 
@@ -172,7 +176,7 @@ def _catch_default_input(caller, raw_string, **kwargs):
         """
         _calculate_height(caller)
         caller.msg("|wHeight re-rolled. You are now " +
-                   caller.ndb._menutree.height_desc + " (" + caller.ndb._menutree.height + " metres). Heights for " + caller.db.race.plural_name + " average between " + str(caller.db.race.min_height) + " metres and " + str(caller.db.race.max_height) + " metres.|n")
+                   caller.ndb._menutree.height_desc + " (" + caller.ndb._menutree.height + " metres). Heights for " + caller.db.species.plural_name + " average between " + str(caller.db.species.min_height) + " metres and " + str(caller.db.species.max_height) + " metres.|n")
         return "look_at_me"
     else:
         pass
@@ -215,7 +219,7 @@ def look_at_me(caller):
 
     table = evtable.EvTable(border="incols")
     table.add_row("Name", caller.ndb._menutree.name)
-    table.add_row("Race", caller.ndb._menutree.race.name)
+    table.add_row("Species", caller.ndb._menutree.species.name)
     table.add_row("Age", caller.ndb._menutree.age)
     table.add_row("Gender", caller.ndb._menutree.gender)
     table.add_row("Height", caller.ndb._menutree.height +
@@ -250,16 +254,16 @@ def allocate_skills(caller, raw_string, **kwargs):
     text += (" |w{}/10 points spent.|n").format(caller.ndb._menutree.allocate)
 
     help_text = (
-        "Your skills form a pyramid. You start with one great skill, two good skills, three fair skills, and four average skills. Your race bonuses are applied on top of your base skills.")
+        "Your skills form a pyramid. You start with one great skill, two good skills, three fair skills, and four average skills. Your species bonuses are applied on top of your base skills.")
 
     options = []
 
     for skill in caller.ndb._menutree.skill_choices:
 
-        # Add indicator for existing race bonus
+        # Add indicator for existing species bonus
         bonus_text = ''
-        if skill in caller.ndb._menutree.race.bonuses:
-            bonus_text += "|g**race bonus**|n "
+        if skill in caller.ndb._menutree.species.bonuses:
+            bonus_text += "|g**species bonus**|n "
 
         # Load skill data
         skill = skills.load_skill(skill)
@@ -330,7 +334,7 @@ def character_sheet(caller, raw_string, **kwargs):
     form = evform.EvForm("world/character_sheet.py")
 
     name_string = "|m{}|n the {} {}".format(
-        caller.ndb._menutree.name, caller.ndb._menutree.height_desc, caller.ndb._menutree.race.name)
+        caller.ndb._menutree.name, caller.ndb._menutree.height_desc, caller.ndb._menutree.species.name)
 
     table_skillsA = evtable.EvTable(border="incols")
     table_skillsB = evtable.EvTable(border="incols")
@@ -398,21 +402,21 @@ def _help(caller):
 
 def _calculate_height(caller):
     """
-    Randomize a character's height based on race min and max height values.
+    Randomize a character's height based on species min and max height values.
     60% chance to be average height
     20% chance to be either short or tall
     """
 
-    height = random.uniform(caller.db.race.min_height,
-                            caller.db.race.max_height)
+    height = random.uniform(caller.db.species.min_height,
+                            caller.db.species.max_height)
 
     # is this a takula?
-    if caller.db.race.name == 'Takula':
+    if caller.db.species.name == 'Takula':
         # there is a 25% chance they are a Skink (short)
         if random.randint(0, 100) <= 25:
             caller.msg("|m{}|n |wis a Skink (a smaller, more dexterous, intelligent Takula). 25% of Takula are Skinks.|n".format(
                 caller.ndb._menutree.name))
-            # override race height defaults
+            # override species height defaults
             height = random.uniform(0.91, 1.40)
 
     stature_deviation = ['short'] * 20 + ['tall'] * 20 + ['average'] * 60
@@ -428,6 +432,6 @@ def _calculate_height(caller):
     height = height + height_var
 
     caller.ndb._menutree.height = format(height, ".2f")
-    caller.ndb._menutree.height_desc = caller.db.race.height_description(
+    caller.ndb._menutree.height_desc = caller.db.species.height_description(
         height)
     pass

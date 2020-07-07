@@ -12,12 +12,15 @@ $purple: #BF19FF;
 $pink: #CC1472;
 $white: #fff;
 
+@import 'fonts';
+
 /* Global variables */
 :root {
   --bg-colour: #161625;
   --bg-accent: #1f1f33;
-  --font-colour: #141414;
+  --font-colour: #e1e1ff;
   --border-colour: #2c2c4a;
+  --font-stack: 'Source Code Pro', -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Ubuntu,Helvetica Neue, Helvetica, sans-serif;
 }
 
 [data-theme="dark"] {
@@ -34,6 +37,7 @@ $white: #fff;
   --border-colour: rgb(242,242,242);
 }
 
+
 /* The base font-size is set at 62.5% for having the convenience
  of sizing rems in a way that is similar to using px: 1.6rem = 16px */
 html {
@@ -44,9 +48,9 @@ html {
 body {
   margin: 0;
   padding: 0;
-  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Ubuntu,Helvetica Neue, Helvetica, sans-serif;
+  font-family: var(--font-stack);
   font-size: 1.9rem;
-  font-weight: 300;
+  font-weight: 500;
   line-height: 1.6;
   background-color: var(--bg-colour);
   color: var(--font-colour);
