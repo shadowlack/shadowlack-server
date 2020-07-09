@@ -5,125 +5,74 @@
     <title>{{game_name}} Web Client</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="icon" type="image/x-icon" href="{% static 'website/images/favicon.ico' %}">
-
     <link rel="stylesheet" href="{% static "website/css/normalize.css" %}">
-
-    <link type="text/css" rel="stylesheet" href="https://golden-layout.com/files/latest/css/goldenlayout-base.css" />
-    <link type="text/css" rel="stylesheet" href={% static "webclient/css/goldenlayout.css" %} />
-    
     {% compress css %}
     <link type="text/x-scss" href="{% static "website/css/webclient.scss" %}" rel="stylesheet">
     {% endcompress %}
-
-    <!-- Import JQuery and warn if there is a problem -->
-    {% block jquery_import %}
-      <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
-    {% endblock %}
-
-    <script>
-        if(!window.jQuery) {
-            document.write("<div class='err'>jQuery library not found or the online version could not be reached. Check so Javascript is not blocked in your browser.</div>");
-        }
-    </script>
-
-
+    <script src="{% static "webclient/js/jquery-3.5.1.min.js" %}"></script>
     <!-- Set up Websocket url and load the evennia.js library-->
     <script>
-        {% if websocket_enabled %}
-            var wsactive = true;
-        {% else %}
-            var wsactive = false;
-        {% endif %}
-
-        {% if browser_sessid %}
-           var csessid = "{{browser_sessid}}";
-        {% else %}
-           var csessid = false;
-        {% endif %}
-
-        {% if websocket_url %}
-            var wsurl = "{{websocket_url}}";
-        {% else %}
-            var wsurl = "ws://" + this.location.hostname + ":{{websocket_port}}";
-        {% endif %}
+      {% if websocket_enabled %}
+          var wsactive = true;
+      {% else %}
+          var wsactive = false;
+      {% endif %}
+      {% if browser_sessid %}
+          var csessid = "{{browser_sessid}}";
+      {% else %}
+          var csessid = false;
+      {% endif %}
+      {% if websocket_url %}
+          var wsurl = "{{websocket_url}}";
+      {% else %}
+          var wsurl = "ws://" + this.location.hostname + ":{{websocket_port}}";
+      {% endif %}
     </script>
-
     <script src={% static "webclient/js/evennia.js" %}></script>
 
-    <!-- set up splits before loading the GUI -->
-<!--
-    <script src="https://unpkg.com/split.js@1.5.9/dist/split.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/mustache.js/2.3.0/mustache.min.js"></script>
--->
     <script src="https://golden-layout.com/files/latest/js/goldenlayout.min.js"></script>
 
     <!-- Load gui library -->
     {% block guilib_import %}
-        <script src={% static "webclient/js/webclient_gui.js" %}></script>
-        <script src={% static "webclient/js/plugins/goldenlayout_default_config.js" %}></script>
-        <script src={% static "webclient/js/plugins/clienthelp.js" %} language="javascript" type="text/javascript" charset="utf-8"></script>
-        <script src={% static "webclient/js/plugins/popups.js" %} language="javascript" type="text/javascript"></script>
-<!--
-	<script src={% static "webclient/js/plugins/options.js" %} language="javascript" type="text/javascript"></script>
--->
-        <script src={% static "webclient/js/plugins/options2.js" %} language="javascript" type="text/javascript"></script>
-        <script src={% static "webclient/js/plugins/iframe.js" %} language="javascript" type="text/javascript"></script>
-        <script src={% static "webclient/js/plugins/message_routing.js" %} language="javascript" type="text/javascript"></script>
-        <script src={% static "webclient/js/plugins/history.js" %} language="javascript" type="text/javascript"></script>
+      <script src="{% static "webclient/js/webclient_gui.js" %}"></script>
+      <script src="{% static "webclient/js/plugins/goldenlayout_default_config.js" %}"></script>
+      <script src="{% static "webclient/js/plugins/clienthelp.js" %}"></script>
+      <script src="{% static "webclient/js/plugins/popups.js" %}"></script>
 
-        <script src={% static "webclient/js/plugins/oob.js" %} language="javascript" type="text/javascript"></script>
-        <script src={% static "webclient/js/plugins/notifications.js" %} language="javascript" type="text/javascript"></script>
+      <script src="{% static "webclient/js/plugins/shadowlack_panes.js" %}"></script>
+      <script src="{% static "webclient/js/plugins/options2.js" %}"></script>
+      <script src="{% static "webclient/js/plugins/message_routing.js" %}"></script>
+      <script src="{% static "webclient/js/plugins/history.js" %}"></script>
+      <script src="{% static "webclient/js/plugins/oob.js" %}"></script>
+      <script src="{% static "webclient/js/plugins/notifications.js" %}"></script>
 
-        <script src={% static "webclient/js/plugins/character.js" %} language="javascript" type="text/javascript"></script>
-<!--
-        <script src={% static "webclient/js/plugins/hotbuttons.js" %} language="javascript" type="text/javascript"></script>
--->
-        <script src={% static "webclient/js/plugins/goldenlayout.js" %} language="javascript" type="text/javascript"></script>
-<!--
-        <script src={% static "webclient/js/plugins/dual_input.js" %} language="javascript" type="text/javascript"></script>
--->
-        <script src={% static "webclient/js/plugins/default_in.js" %} language="javascript" type="text/javascript"></script>
-        <script src={% static "webclient/js/plugins/default_out.js" %} language="javascript" type="text/javascript"></script>
-        <script src={% static "webclient/js/plugins/multimedia.js" %} language="javascript" type="text/javascript"></script>
+      <script src="{% static "webclient/js/plugins/goldenlayout.js" %}"></script>
+
+      <script src="{% static "webclient/js/plugins/default_in.js" %}"></script>
+      <script src="{% static "webclient/js/plugins/default_out.js" %}"></script>
+      <script src="{% static "webclient/js/plugins/multimedia.js" %}"></script>
     {% endblock %}
 
-    <script src="https://cdn.rawgit.com/ejci/favico.js/master/favico-0.3.10.min.js"></script>
-    <script>
-        if(!window.Favico) {
-            document.write("<div class='err'>Favico.js library not found or the online version could not be reached. Check so Javascript is not blocked in your browser.</div>");
-        }
-    </script>
+    <script src="{% static "webclient/js/favico.js" %}"></script>
 
-    <!-- jQuery first, then Tether, then Bootstrap JS. -->
-    
     {% block scripts %}
     {% endblock %}
   </head>
-  <body>
-
-    <div id="connecting">
-        {% block connecting %}
-        {% endblock %}
-    </div>
-
-    <div id="noscript" class="err">
-        <h3>Javascript Error: The Shadowlack MUD client requires that you
-            have Javascript activated.</h3>
-            <p>Turn off script blockers and/or switch to a
-            web browser that supports JavaScript.</p>
-        <!-- This is will only fire if javascript is actually active -->
-        <script>
-          $(document).ready(function () {
-              $('#noscript').remove();
-              $('#clientwrapper').removeClass('d-none');
-          })
-        </script>
-    </div>
-
-    <!-- main client -->
-    <div id=clientwrapper class="d-none">
-      {% block client %}
-      {% endblock %}
-    </div>
-  </body>
+<body>
+  <aside id="connecting">{% block connecting %}{% endblock %}</aside>
+  <noscript id="noscript" class="err">
+    <p>Error: {{game_name}} Web Client requires that you enable JavaScript.</p>
+  </noscript>
+  <script>
+    $(document).ready(function() {
+      $('#noscript').remove();
+      $('#clientwrapper').removeClass('d-none');
+    });
+  </script>
+  <!-- main client -->
+  <main id=clientwrapper class="d-none">
+    {% block client %}
+    {% endblock %}
+  </main>
+</body>
 </html>

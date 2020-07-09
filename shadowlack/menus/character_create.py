@@ -17,11 +17,18 @@ def menunode_start(caller, raw_string, **kwargs):
     1. Choose your character's species.
     """
     caller.ndb._menutree.name = caller.new_char
+    caller.ndb._menutree.age = 23
+    caller.ndb._menutree.species = None
+    caller.ndb._menutree.weight = "Average"
+    caller.ndb._menutree.height = None
+    caller.ndb._menutree.height_desc = None
+    caller.ndb._menutree.gender = "Ambiguous"
 
-    #("cmdname", (args), {kwargs})
-    #caller.msg(character_pane=((1, 2, 3, 4), {"foo": "bar"}))
-    #caller.msg(message="text", type="character")
-    
+    _character_pane(caller)
+
+    caller.msg(("Shit's empty.", {
+               "type": "inventory"}))
+
     text = dedent("""
         |cWelcome to Shadowlack's character creation.|n
 
@@ -83,8 +90,6 @@ def _choose_species(caller, raw_string, **kwargs):
     char_species = species.load_species(chosen_species)
     caller.db.species = char_species
     caller.ndb._menutree.species = char_species
-    caller.ndb._menutree.age = 23
-    caller.ndb._menutree.weight = "Average"
 
     # generate a randomized height based upon selected species
     _calculate_height(caller)
@@ -101,6 +106,7 @@ def _choose_gender(caller, raw_string, **kwargs):
         return "choose_gender"
 
     caller.ndb._menutree.gender = gender
+    _character_pane(caller)
 
     return "look_at_me"
 
@@ -132,6 +138,7 @@ def _choose_weight(caller, raw_string, **kwargs):
         return "choose_weight"
     caller.msg("|wYou set your weight to {}.|n".format(weight))
     caller.ndb._menutree.weight = weight
+    _character_pane(caller)
     return "look_at_me"
 
 
@@ -165,7 +172,6 @@ def choose_how_babby_formed(caller):
 
 def _catch_default_input(caller, raw_string, **kwargs):
     input_string = raw_string.lower()
-    caller.msg(input_string)
     if input_string == "age":
         return enter_age
     elif input_string == "weight":
@@ -175,6 +181,7 @@ def _catch_default_input(caller, raw_string, **kwargs):
         Re-roll a character's height
         """
         _calculate_height(caller)
+        _character_pane(caller)
         caller.msg("|wHeight re-rolled. You are now " +
                    caller.ndb._menutree.height_desc + " (" + caller.ndb._menutree.height + " metres). Heights for " + caller.db.species.plural_name + " average between " + str(caller.db.species.min_height) + " metres and " + str(caller.db.species.max_height) + " metres.|n")
         return "look_at_me"
@@ -196,6 +203,7 @@ def _set_age(caller, raw_string, **kwargs):
         else:
             caller.msg("|wYou set your age to {}.|n".format(inp_age))
             caller.ndb._menutree.age = inp_age
+            _character_pane(caller)
 
     return "look_at_me"
 
@@ -327,6 +335,26 @@ def _allocate_skills(caller, raw_string, **kwargs):
     return "allocate_skills"
 
 
+def _character_pane(caller):
+    form = evform.EvForm("world/character_pane.py")
+
+    name_string = f"|m{caller.ndb._menutree.name}|n"
+
+    if caller.ndb._menutree.species is None:
+        name_string = f"|m{caller.ndb._menutree.name}|n"
+    else:
+        name_string = f"|m{caller.ndb._menutree.name}|n the {caller.ndb._menutree.height_desc} {caller.ndb._menutree.species.name}"
+
+    form.map(cells={
+        1: name_string,
+        3: caller.ndb._menutree.age,
+        4: caller.ndb._menutree.gender,
+        5: caller.ndb._menutree.height,
+        6: caller.ndb._menutree.weight
+    })
+
+    caller.msg((f"{form}", {"type": "character"}))
+
 def character_sheet(caller, raw_string, **kwargs):
     options = []
     help_text = "This is your character sheet. Does everything look good to you?"
@@ -434,4 +462,6 @@ def _calculate_height(caller):
     caller.ndb._menutree.height = format(height, ".2f")
     caller.ndb._menutree.height_desc = caller.db.species.height_description(
         height)
-    pass
+
+    _character_pane(caller)
+
