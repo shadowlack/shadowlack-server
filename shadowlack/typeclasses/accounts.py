@@ -175,11 +175,11 @@ class Account(DefaultAccount):
             if is_su or len(characters) < charmax:
                 if not characters:
                     result.append(
-                        "\n\n You don't have any characters yet. See |yhelp create|n for creating one."
+                        "\n\n You don't have any characters yet. See |yhelp hatch|n for creating one."
                     )
                 else:
                     result.append(
-                        "\n |ycreate|n |w<name>|n - Create a new character.")
+                        "\n |yhatch|n |w<name>|n - Create a new character.")
 
             if characters:
                 string_s_ending = len(characters) > 1 and "s" or ""

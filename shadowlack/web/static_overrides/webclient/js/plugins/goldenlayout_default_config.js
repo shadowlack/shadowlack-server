@@ -53,10 +53,11 @@ var goldenlayout_config = {
       },{
           type: 'component',
           componentName: 'inventory_pane',
-          componentId: 'evennia',
+          componentId: 'inventory_pane',
           title: 'Inventory',
           isClosable: false,
           componentState: {
+            cssClass: 'content inventory',
             types: 'inventory',
             updateMethod: 'replace',
           },

@@ -2,7 +2,7 @@ import unittest
 
 from evennia.commands.default.tests import CommandTest
 
-from commands.character import CmdGender, CmdNew
+from commands.character import CmdGender, CmdHatch
 from typeclasses.characters import Character
 
 

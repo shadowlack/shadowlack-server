@@ -65,14 +65,14 @@ class Character(DefaultCharacter):
         # appearance
         self.db.desc = "You see no one special."
         self.db.sdesc = "An unknown stranger"
-        self.db.gender = "Ambiguous"
+        self.db.gender = "ambiguous"
         self.db.age = 0
         self.db.height = 0.00
         self.db.weight = "Average"
         self.db.species = None
         # self.db.is_nullfire = False
 
-        self.characteristics.init_characteristics()
+        # self.characteristics.init_characteristics()
 
         # information
         self.db.surname = None

@@ -13,29 +13,29 @@ _MAX_NR_CHARACTERS = settings.MAX_NR_CHARACTERS
 _MULTISESSION_MODE = settings.MULTISESSION_MODE
 
 
-class CmdCreate(MuxCommand):
+class CmdHatch(MuxCommand):
     """
     Create a new character. Please create using your character's first name. You will be able to add a last name (surname) later.
 
     Usage:
-      create <charactername>
+      hatch <charactername>
     Example:
-      create Koani
+      hatch Koani
 
     Begins the character creation process with your character's chosen name.
     """
-    key = "create"
+    key = "hatch"
     locks = "cmd:pperm(Player)"
     help_category = "Character"
 
     account_caller = True
 
     def func(self):
-        "create the new character"
+        "Create the new character"
         account = self.account
         session = self.session
         if not self.args:
-            self.msg("Usage: create <charactername>")
+            self.msg("Usage: hatch <charactername>")
             return
         key = self.args.strip().capitalize()
 
@@ -96,5 +96,5 @@ class CmdGender(MuxCommand):
         if arg not in ("male", "female", "neutral", "ambiguous"):
             caller.msg("Usage: gender female||male||neutral||ambiguous")
             return
-        caller.db.gender = arg.capitalize()
-        caller.msg("Your gender was set to |g%s|n." % caller.db.gender)
+        caller.db.gender = arg
+        caller.msg(f"Your gender was set to |g{arg.capitalize()}|n.")

@@ -17,9 +17,10 @@ own cmdsets by inheriting from them or directly from `evennia.CmdSet`.
 from evennia import default_cmds
 
 from commands.base.help import CmdHelp
-from commands.character import CmdGender, CmdCreate
+from commands.character import CmdGender, CmdHatch
 from commands.roleplay import RPSystemCmdSet
-from evennia.commands.default import batchprocess
+from commands.items import ItemsCmdSet
+from evennia.commands.default import batchprocess, building
 
 from paxboards.commands import add_forum_commands
 
@@ -40,6 +41,7 @@ class CharacterCmdSet(default_cmds.CharacterCmdSet):
 
         self.add(CmdGender())
         self.cmdset.add(RPSystemCmdSet, permanent=True)
+        self.cmdset.add(ItemsCmdSet, permanent=True)
 
 
 class AccountCmdSet(default_cmds.AccountCmdSet):
@@ -58,11 +60,38 @@ class AccountCmdSet(default_cmds.AccountCmdSet):
         """
         super().at_cmdset_creation()
         self.add_overridden_commands()
-        self.add(CmdCreate())
+        self.add(CmdHatch())
 
         # Batchprocessor commands
         self.add(batchprocess.CmdBatchCommands())
         self.add(batchprocess.CmdBatchCode())
+
+        # Building and world manipulation
+        self.add(building.CmdTeleport())
+        self.add(building.CmdSetObjAlias())
+        self.add(building.CmdListCmdSets())
+        self.add(building.CmdWipe())
+        self.add(building.CmdSetAttribute())
+        self.add(building.CmdName())
+        self.add(building.CmdDesc())
+        self.add(building.CmdCpAttr())
+        self.add(building.CmdMvAttr())
+        self.add(building.CmdCopy())
+        self.add(building.CmdFind())
+        self.add(building.CmdOpen())
+        self.add(building.CmdLink())
+        self.add(building.CmdUnLink())
+        self.add(building.CmdCreate())
+        self.add(building.CmdDig())
+        self.add(building.CmdTunnel())
+        self.add(building.CmdDestroy())
+        self.add(building.CmdExamine())
+        self.add(building.CmdTypeclass())
+        self.add(building.CmdLock())
+        self.add(building.CmdScript())
+        self.add(building.CmdSetHome())
+        self.add(building.CmdTag())
+        self.add(building.CmdSpawn())
 
         # Add forum commands
         add_forum_commands(self)

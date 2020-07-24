@@ -25,13 +25,13 @@ let inventory_pane = (function () {
 
     // register our component
     myLayout.registerComponent('inventory_pane', function (container, componentState) {
-        let mycssdiv = $('<div>').addClass('content character');
+      let mycssdiv = $('<div>').addClass('content inventory');
         mycssdiv.attr('types', 'inventory');
         mycssdiv.attr('updateMethod', 'replace');
         mycssdiv.appendTo(container.getElement());
     });
 
-    console.log("Inventory Pane Initialized.");
+    console.log("Character Pane Initialized.");
   }
   
   return {

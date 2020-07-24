@@ -326,8 +326,6 @@ def _allocate_skills(caller, raw_string, **kwargs):
     caller.ndb._menutree.skill_choices.remove(chosen_skill)
     caller.ndb._menutree.allocate += 1
 
-    caller.msg(str(caller.ndb._menutree.skills))
-
     if caller.ndb._menutree.allocate == len(point_assignment):
         caller.msg("|wAll skill points have been spent.|n")
         return "character_sheet"

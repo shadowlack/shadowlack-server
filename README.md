@@ -13,25 +13,27 @@ It is under a CC BY-NC-SA 4.0 license as it contains some player writing and med
 
 ## Installation
 
-1. `git clone --recurse-submodules https://github.com/shriker/shadowlack-rpg.git`
-1. `cd shadowlack-rpg`
+1. `git clone --recurse-submodules https://github.com/shriker/shadowlack-server.git`
+1. `cd shadowlack-server`
 1. `virtualenv evenv`
 
     Your working directory structure should look like this:
     ```
-    shadowlack-rpg/
+    shadowlack-server/
         evennia/
         evenv/
         shadowlack/
     ```
 1. `source evenv/bin/activate` (Linux, Mac), or `evenv\Scripts\activate` (Windows, PS Shell, Git Bash)
 1. `pip install -e evennia`
+1. `pip install -r requirements.txt`
 1. `cd shadowlack`
-1. Copy `server/conf/.env.example` to `server/conf/.env` and edit your database variables.
+1. Copy `shadowlack/server/conf/.env.example` to `shadowlack/server/conf/.env` and edit your database variables.
 1. `evennia migrate`
 1. `evennia start`
 
 ### Server Commands
+
 Must be run within the `shadowlack` directory.
 
 ```bash
@@ -45,12 +47,14 @@ evennia stop
 Running `evennia start` for the first time will prompt you to create a new super user account.
 
 ### Migrations
+
 ```bash
 evennia makemigrations
 evennia migrate
 ```
 
 ### Testing
+
 ```bash
 evennia --settings settings.py test commands
 evennia test --settings settings.py
@@ -66,5 +70,6 @@ batchcode seeder_pages
 ```
 
 ## Links 🔗
+
 * [Shadowlack](https://shadowlack.com)
 * [Evennia Documentation](http://www.evennia.com/)

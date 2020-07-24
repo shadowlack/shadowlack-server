@@ -77,7 +77,6 @@ class RPCommand(MuxCommand):
         "strip extra whitespace"
         self.args = self.args.strip()
 
-
 class CmdEmote(RPCommand):  # replaces the main emote
     """
     Emote an action, allowing dynamic replacement of
