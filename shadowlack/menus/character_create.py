@@ -9,6 +9,7 @@ from evennia.server.sessionhandler import SESSIONS
 from evennia.utils import evtable, evform, fill, dedent, utils, create, logger, search
 from evennia.utils.evmenu import EvMenu, list_node, get_input
 
+from typeclasses import characters
 from world import species, skills
 
 
@@ -19,10 +20,11 @@ def menunode_start(caller, raw_string, **kwargs):
     caller.ndb._menutree.name = caller.new_char
     caller.ndb._menutree.age = 23
     caller.ndb._menutree.species = None
-    caller.ndb._menutree.weight = "Average"
+    caller.ndb._menutree.weight = "average"
     caller.ndb._menutree.height = None
     caller.ndb._menutree.height_desc = None
-    caller.ndb._menutree.gender = "Ambiguous"
+    caller.ndb._menutree.gender = "ambiguous"
+    caller.ndb._menutree.pronoun = "they"
 
     _character_pane(caller)
 
@@ -102,25 +104,26 @@ def _choose_gender(caller, raw_string, **kwargs):
 
     if not gender:
         caller.error_echo(
-            "Something went wrong with gender selection.")
+            "Something went wrong with pronoun selection.")
         return "choose_gender"
 
     caller.ndb._menutree.gender = gender
+    caller.ndb._menutree.pronoun = characters.GENDER_PRONOUN_MAP[gender]['s']
     _character_pane(caller)
 
     return "look_at_me"
 
 
 def choose_gender(caller):
-    text = "Choose your character's gender. This will affect what pronouns are used to refer to them."
+    text = "Choose your character's pronouns. This will affect how your character is referenced."
     options = [
-        {"key": ("f"), "desc": "Female - she/her/hers",
-         "goto": (_choose_gender, {"gender": "Female"})},
-        {"key": ("m"), "desc": "Male - he/him/his",
-         "goto": (_choose_gender, {"gender": "Male"})},
-        {"key": ("n"), "desc": "Neutral - it/its/its",
-         "goto": (_choose_gender, {"gender": "Neutral"})},
-        {"key": ("a"), "desc": "Ambiguous - they/them/theirs", "goto": (_choose_gender, {"gender": "Ambiguous"})}]
+        {"key": ("f"), "desc": "she/her/hers",
+         "goto": (_choose_gender, {"gender": "female"})},
+        {"key": ("m"), "desc": "he/him/his",
+         "goto": (_choose_gender, {"gender": "male"})},
+        {"key": ("n"), "desc": "it/its/its",
+         "goto": (_choose_gender, {"gender": "neutral"})},
+        {"key": ("a"), "desc": "they/them/theirs", "goto": (_choose_gender, {"gender": "ambiguous"})}]
     options.append({"key": ("r", "_default"),
                     "desc": "Return to species selection.", "goto": "menunode_start"})
 
@@ -148,22 +151,56 @@ def choose_weight(caller, raw_string, **kwargs):
     """
     text = "Choose your character's natural weight."
     options = []
-    for weight in ["Underweight", "Light", "Average", "Heavy", "Obese"]:
+    for weight in ["underweight", "light", "average", "heavy", "obese"]:
         options.append({"key": (weight[:1].lower()), "desc": weight, "goto": (
             _choose_weight, {"weight": weight})})
     return text, options
 
 
+def choose_anatomy(caller, raw_string, **kwargs):
+    """
+    Choose your character's anatomy/mutations
+    """
+    text = "Build the physical aspects of your character. Some anatomy aspects are dependent upon your character's species."
+    options = []
+
+    # height and weight
+    options.append({"key": ("height"),
+                    "desc": f"Not tall or short enough? Re-roll |m{caller.ndb._menutree.name}|n's height.", "goto": (_catch_default_input)})
+    options.append({"key": ("weight"),
+                    "desc": f"Adjust |m{caller.ndb._menutree.name}|n's weight (lighter, heavier, etc).", "goto": (_catch_default_input)})
+
+    # _toggle_display(text, val, bool=True):
+    # species
+    # feydragon
+    # lukuo
+    # takula
+    options.append({"key": ("horns"), "desc": _toggle_display(f"Does {caller.ndb._menutree.pronoun} have horns?", False, False), "goto": (_catch_default_input)})
+
+    # reproduction
+    options.append({"key": ("fertility"),
+                    "desc": _toggle_display(f"Can {caller.ndb._menutree.pronoun} reproduce?", True, True), "goto": (_catch_default_input)})
+    options.append({"key": ("pregnancy"),
+                    "desc": _toggle_display(f"Can {caller.ndb._menutree.pronoun} become pregnant?", None, True), "goto": (_catch_default_input)})
+
+    # menu defaults
+    options.append({"key": ("r", "_default"), "desc": "Reset your progress and start over character creation.", "goto": "menunode_start"})
+    options.append({"key": ("c", "continue"),
+                    "desc": "|gContinue|n with character creation.", "goto": "look_at_me"})
+
+    return text, options
+
+
 """
 def choose_how_babby_formed(caller):
-    text = "Can your character become pregnant?"
+    text = "Can x become pregnant?"
     options = ({"key": ("1", "y", "yes"), "desc": "Yes"},
                {"key": ("2", "n", "N"), "desc": "No"})
     return text, options
 
 
-def choose_how_babby_formed(caller):
-    text = "Can your character make others pregnant?"
+def choose_can_babby_formed(caller):
+    text = "Can x produce offspring? Are they fertile?"
     options = ({"key": ("1", "y", "yes"), "desc": "Yes"},
                {"key": ("2", "n", "N"), "desc": "No"})
     return text, options
@@ -174,6 +211,8 @@ def _catch_default_input(caller, raw_string, **kwargs):
     input_string = raw_string.lower()
     if input_string == "age":
         return enter_age
+    elif input_string == "is_fertile":
+        pass
     elif input_string == "weight":
         return "choose_weight"
     elif input_string == "height":
@@ -229,14 +268,16 @@ def look_at_me(caller):
     table.add_row("Name", caller.ndb._menutree.name)
     table.add_row("Species", caller.ndb._menutree.species.name)
     table.add_row("Age", caller.ndb._menutree.age)
-    table.add_row("Gender", caller.ndb._menutree.gender)
+    table.add_row("Pronouns", caller.ndb._menutree.gender)
     table.add_row("Height", caller.ndb._menutree.height +
                   " metres (" + caller.ndb._menutree.height_desc + ")")
     table.add_row("Weight", caller.ndb._menutree.weight)
     table.reformat_column(0, align="r")
 
     options = (
-        {"key": "age", "desc": "Change your character's age.", "goto": "enter_age"},  {"key": "height", "desc": "Not tall or short enough? Re-roll your character's height.", "goto": (_catch_default_input)}, {"key": "weight", "desc": "Adjust your character's weight (lighter, heavier, etc).", "goto": (_catch_default_input)}, {"key": "r", "desc": "Reset your progress and start over character creation.", "goto": "menunode_start"}, {"key": ("c", "continue"), "desc": "|gContinue|n with character skill allocation.", "goto": "allocate_skills"}, {"key": "_default", "goto": (_catch_default_input)})
+        {"key": "anatomy", "desc": "Change your character's physical anatomy.",
+            "goto": "choose_anatomy"},
+        {"key": "age", "desc": "Change your character's age.", "goto": "enter_age"}, {"key": "r", "desc": "Reset your progress and start over character creation.", "goto": "menunode_start"}, {"key": ("c", "continue"), "desc": "|gContinue|n with character skill allocation.", "goto": "allocate_skills"}, {"key": "_default", "goto": (_catch_default_input)})
 
     return table, options
 
@@ -343,10 +384,11 @@ def _character_pane(caller):
     else:
         name_string = f"|m{caller.ndb._menutree.name}|n the {caller.ndb._menutree.height_desc} {caller.ndb._menutree.species.name}"
 
+    #caller.ndb._menutree.gender
     form.map(cells={
         1: name_string,
         3: caller.ndb._menutree.age,
-        4: caller.ndb._menutree.gender,
+        4: f"{characters.GENDER_PRONOUN_MAP[caller.ndb._menutree.gender]['s']}/{characters.GENDER_PRONOUN_MAP[caller.ndb._menutree.gender]['o']}",
         5: caller.ndb._menutree.height,
         6: caller.ndb._menutree.weight
     })
@@ -419,6 +461,12 @@ def menunode_end(caller, raw_string):
 
 # Helpers
 
+def _toggle_display(text, value, bool=True):
+    bool_val = "|xNo|n"
+    if bool:
+        if value == True:
+            bool_val = "|gYes|n"
+    return f"{text} {bool_val}"
 
 def _help(caller):
     """

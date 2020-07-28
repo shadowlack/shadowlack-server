@@ -59,29 +59,26 @@ class Character(DefaultCharacter):
         """
         Called once when the character is first created.
         """
-
         super().at_object_creation()
-
         # appearance
         self.db.desc = "You see no one special."
         self.db.sdesc = "An unknown stranger"
         self.db.gender = "ambiguous"
         self.db.age = 0
         self.db.height = 0.00
-        self.db.weight = "Average"
+        self.db.weight = "average"
         self.db.species = None
         # self.db.is_nullfire = False
-
-        # self.characteristics.init_characteristics()
 
         # information
         self.db.surname = None
         self.db.marital_status = "Single"
         self.db.allegiance = None
-        self.db.is_awake = True
 
-        self.db.khasi = 0
-        self.db.bhijan = 0
+        # on their person
+        self.db.wallet = {"khasi": 0, "bhijan" : 0}
+
+        self.db.is_awake = True
         self.db.position = 'STANDING'
 
         self.db.skills = {}
