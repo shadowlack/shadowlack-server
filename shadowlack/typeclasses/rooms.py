@@ -34,7 +34,31 @@ class Room(ContribRPRoom):
         # Insecure communication to key actions
         self.db.is_public = True
 
+        # allow_pets = True
+
         self.db.notes = None
+
+    @property
+    def hemisphere(self):
+        """Return the hemisphere or None."""
+        x = self.tags.get(category="hemisphere")
+        return str(hemisphere) if isinstance(hemisphere, str) else None
+
+    @hemisphere.setter
+    def hemisphere(self, hemisphere):
+        """
+        Change the hemisphere.
+        Hemisphere can be: northeast, northwest, southeast, southwest
+        """
+        allowed_hemispheres = ('northeast', 'northwest', 'southeast', 'southwest')
+
+        old = self.tags.get(category="hemisphere")
+        if old is not None:
+            self.tags.remove(old, category="hemisphere")
+        if hemisphere not in allowed_hemispheres:
+            raise ValueError("Invalid hemisphere.")
+        if hemisphere is not None:
+            self.tags.add(str(hemisphere), category="hemisphere")
     
     @property
     def x(self):

@@ -18,7 +18,6 @@
           <thead>
           <tr>
             <th>Name</th>
-            <th>Gender</th>
             <th>Age</th>
             <th>Species</th>
           </tr>
@@ -27,7 +26,6 @@
           {% for object in object_list %}
           <tr>
             <td><a href="{{ object.web_get_detail_url }}">{{ object }}</a></td>
-            <td>{{ object.db.gender }}</td>
             <td></td>
             <td>Species</td>
           </tr>

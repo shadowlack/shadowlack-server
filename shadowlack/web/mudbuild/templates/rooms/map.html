@@ -1,0 +1,14 @@
+{% extends "admin/base_site.html" %}
+{% block title %}MUD Map{% endblock %}
+{% block sidebar %}{% endblock %}
+{% block content %}
+<div class="container">
+  <ul>
+  {% for object in object_list %}
+    <li>
+      <b>{{ object.db_key }}</b> {{ object.db_typeclass_path }}
+    </li>
+  {% endfor %}
+  </ul>
+</div>
+{% endblock %}
