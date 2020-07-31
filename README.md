@@ -72,4 +72,5 @@ batchcode seeder_pages
 ## Links 🔗
 
 * [Shadowlack](https://shadowlack.com)
+* [Discord](https://discord.gg/BNhwAm9)
 * [Evennia Documentation](http://www.evennia.com/)
