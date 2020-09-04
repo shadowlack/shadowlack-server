@@ -11,7 +11,8 @@ autobahn >= 17.9.3
 # django
 django-environ==0.4.5
 django_compressor
-mysqlclient
+# for postgresql
+psycopg2==2.8.5
 
 # try to resolve dependency issue in py3.7
 attrs >= 19.2.0

@@ -1,9 +1,7 @@
 # Shadowlack
-[![license: CC BY-NC-SA 4.0](https://img.shields.io/badge/license-CC%20BY--NC--SA%204.0-lightgrey.svg)]() [![evennia](https://img.shields.io/badge/evennia-0.9--beta-%23E7672E)](http://www.evennia.com/) [![Join us on Discord](https://img.shields.io/discord/140589809231069184?logo=discord)](https://discord.gg/BNhwAm9) ![](https://img.shields.io/badge/kill-grue-purple.svg)
+[![evennia](https://img.shields.io/badge/evennia-0.9--beta-%23E7672E)](http://www.evennia.com/) [![Join us on Discord](https://img.shields.io/discord/140589809231069184?logo=discord)](https://discord.gg/BNhwAm9) ![](https://img.shields.io/badge/kill-grue-purple.svg)
 
 This repository contains data that is specific to the Shadowlack roleplaying game.
-
-It is under a CC BY-NC-SA 4.0 license as it contains some player writing and media that may not be used outside of Shadowlack's game context without attribution.
 
 ## Requirements
 
@@ -13,7 +11,7 @@ It is under a CC BY-NC-SA 4.0 license as it contains some player writing and med
 
 ## Installation
 
-1. `git clone --recurse-submodules https://github.com/shriker/shadowlack-server.git`
+1. `git clone --recurse-submodules https://github.com/shadowlack/shadowlack-server.git`
 1. `cd shadowlack-server`
 1. `virtualenv evenv`
 
@@ -69,8 +67,13 @@ batchcode seeder_codex
 batchcode seeder_pages
 ```
 
+## Licenses
+
+The content of this project (characters, species, locations, etc) itself is licensed under the [Attribution-NonCommercial-ShareAlike 4.0 International](https://creativecommons.org/licenses/by-nc-sa/4.0/) (CC BY-NC-SA 4.0) license.
+
+The underlying source code used to format and display that content is licensed under a [BSD license](LICENSE.md).
+
 ## Links 🔗
 
 * [Shadowlack](https://shadowlack.com)
-* [Discord](https://discord.gg/BNhwAm9)
 * [Evennia Documentation](http://www.evennia.com/)
